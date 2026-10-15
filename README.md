@@ -44,7 +44,7 @@ AI assistant how to use it well:
   faces** by highlighting them in your Kadvia window;
 - save `.kadvia` / `.kasm` / `.kdraw`, or export STEP, STL, 3MF, OBJ or a sketch as DXF.
 
-> Status: preview (v0.8). Parametric modeling (sketch, extrude, revolve, holes, fillets and
+> Status: preview (v0.9). Adds install guidance when Kadvia is missing. Parametric modeling (sketch, extrude, revolve, holes, fillets and
 > chamfers including mixed convex/concave corners, patterns, mirror, loft, sweep, shell, draft),
 > hole wizard and threads, sketch tools and DXF import/export, materials, appearances and
 > product renders, reference images, imported-STEP editing (mesh-only bodies kept), assemblies
@@ -68,7 +68,7 @@ optional — it makes results better (design rules, workflows, worked examples).
 | `install/README.md` | Install Kadvia and connect your AI client |
 
 ## Quick start
-1. Install and open Kadvia (macOS or Windows) — see [install/README.md](install/README.md).
+1. Install and open Kadvia (macOS or Windows) — see [install/README.md](install/README.md). Latest builds: [macOS](https://kadvia.saurabhkeskar3.workers.dev/get/macos), [Windows](https://kadvia.saurabhkeskar3.workers.dev/get/windows).
 2. In Kadvia choose **AI → Connect AI assistant** and click Connect next to your client
    (or add the `kadvia` MCP server to your client's config by hand).
 3. Optional — add the instructions:

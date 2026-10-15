@@ -3,7 +3,7 @@ name: kadvia
 description: Designs, edits and inspects mechanical CAD in the Kadvia desktop app through its MCP server. Builds parametric parts from text, photos, drawings or DXF files (sketches with splines and text, extrudes, revolves, tapped/counterbored holes, threads, fillets, patterns, lofts, sweeps, shells; named parameters), traces calibrated reference images, edits imported STEP files (resize holes, remove fillets), assembles parts with mates (gears, cams, limits; DOF, motion, BOM, interference), makes 2D drawings (tolerances, GD&T, BOM, balloons; PDF/DXF/SVG), assigns materials and looks for mass and product renders, and checks manufacturability for CNC, 3D printing, molding and sheet metal. Verifies with exact mass and per-model renders from any angle; highlights faces; saves .kadvia/.kasm/.kdraw or exports STEP/STL/3MF/OBJ and sketch DXF. Use when the user asks to model, design, modify, measure, assemble, draw, render, check or export a CAD part, STEP or DXF file, shares an image of a part to rebuild, or mentions Kadvia.
 compatibility: Requires the Kadvia desktop app (macOS or Windows) running, with its MCP server ("kadvia") connected to an MCP-capable AI client.
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Kadvia
@@ -22,6 +22,26 @@ What it can do:
 - **Design check:** manufacturability for CNC, FDM/SLA printing, injection molding and sheet metal.
 - **Inspect and present models:** open files, measure exactly, take screenshots of one model (or chosen bodies of it) from standard or custom angles (perspective, sections), read the user's selection (faces, edges, vertices, bodies) and highlight things for the user.
 - **Save and export:** `.kadvia`, `.kasm`, `.kdraw`; STEP, STL, 3MF or OBJ; a sketch as DXF.
+
+## If Kadvia is not installed
+Check first: call `kadvia:kadvia_status`. If the `kadvia` tools are missing, the app is probably not installed or
+not connected. Look for the app (macOS: `/Applications/Kadvia.app`; Windows: the Start menu or the install folder
+that contains `kadvia-mcp.exe`). If it is installed but not running, ask the user to open it. If it is not
+installed, **ask the user before downloading anything**, then fetch the latest release for their system:
+
+| System | Link (always the latest version) |
+|---|---|
+| macOS (Apple silicon and Intel) | https://kadvia.saurabhkeskar3.workers.dev/get/macos |
+| Windows installer | https://kadvia.saurabhkeskar3.workers.dev/get/windows |
+| Windows MSI (IT deployment) | https://kadvia.saurabhkeskar3.workers.dev/get/windows-msi |
+
+- macOS: `curl -L -o ~/Downloads/Kadvia.dmg <link>`, then `open ~/Downloads/Kadvia.dmg` and ask the user to drag
+  Kadvia to Applications.
+- Windows (PowerShell): `Invoke-WebRequest -Uri <link> -OutFile $env:USERPROFILE\Downloads\Kadvia-setup.exe`, then
+  ask the user before starting the installer.
+- Never install silently. After installing, ask the user to open Kadvia, choose **AI → Connect AI assistant**,
+  and restart this AI client, then call `kadvia:kadvia_status` again.
+- If a link fails, send the user to the Download page of the Kadvia website instead of guessing another URL.
 
 ## Conventions
 - Units: **mm** and **degrees**. Areas are mm² and volumes mm³. Convert only when the user asks.

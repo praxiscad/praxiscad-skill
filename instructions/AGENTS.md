@@ -22,6 +22,26 @@ What it can do:
 - **Inspect and present models:** open files, measure exactly, take screenshots of one model (or chosen bodies of it) from standard or custom angles (perspective, sections), read the user's selection (faces, edges, vertices, bodies) and highlight things for the user.
 - **Save and export:** `.kadvia`, `.kasm`, `.kdraw`; STEP, STL, 3MF or OBJ; a sketch as DXF.
 
+## If Kadvia is not installed
+Check first: call `kadvia:kadvia_status`. If the `kadvia` tools are missing, the app is probably not installed or
+not connected. Look for the app (macOS: `/Applications/Kadvia.app`; Windows: the Start menu or the install folder
+that contains `kadvia-mcp.exe`). If it is installed but not running, ask the user to open it. If it is not
+installed, **ask the user before downloading anything**, then fetch the latest release for their system:
+
+| System | Link (always the latest version) |
+|---|---|
+| macOS (Apple silicon and Intel) | https://kadvia.saurabhkeskar3.workers.dev/get/macos |
+| Windows installer | https://kadvia.saurabhkeskar3.workers.dev/get/windows |
+| Windows MSI (IT deployment) | https://kadvia.saurabhkeskar3.workers.dev/get/windows-msi |
+
+- macOS: `curl -L -o ~/Downloads/Kadvia.dmg <link>`, then `open ~/Downloads/Kadvia.dmg` and ask the user to drag
+  Kadvia to Applications.
+- Windows (PowerShell): `Invoke-WebRequest -Uri <link> -OutFile $env:USERPROFILE\Downloads\Kadvia-setup.exe`, then
+  ask the user before starting the installer.
+- Never install silently. After installing, ask the user to open Kadvia, choose **AI → Connect AI assistant**,
+  and restart this AI client, then call `kadvia:kadvia_status` again.
+- If a link fails, send the user to the Download page of the Kadvia website instead of guessing another URL.
+
 ## Conventions
 - Units: **mm** and **degrees**. Areas are mm² and volumes mm³. Convert only when the user asks.
 - **Z is up.** `front` looks along +Y (camera on −Y), `top` looks down −Z and `right` looks along −X.

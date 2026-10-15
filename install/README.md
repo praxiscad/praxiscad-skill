@@ -4,6 +4,14 @@
 Download Kadvia for macOS (.dmg) or Windows (installer) from the Kadvia website and open it
 once. Your AI can only work with Kadvia while the app is running.
 
+Latest version, direct links:
+- macOS (Apple silicon and Intel): https://kadvia.saurabhkeskar3.workers.dev/get/macos
+- Windows installer: https://kadvia.saurabhkeskar3.workers.dev/get/windows
+- Windows MSI: https://kadvia.saurabhkeskar3.workers.dev/get/windows-msi
+
+If you use this skill and Kadvia is not installed, your AI will offer these links and ask before
+downloading anything.
+
 ## 2. Connect your AI client
 Kadvia ships a small MCP server, `kadvia-mcp`, inside the app. In Kadvia open
 **AI → Connect AI assistant**: it lists the AI clients installed on your computer and connects
@@ -51,7 +59,7 @@ checks, worked examples):
 - other clients: use `instructions/AGENTS.md` as project rules or a system prompt (see the
   main [README](../README.md#quick-start) for where each client reads it).
 
-Update to the latest version (v0.8) whenever you update Kadvia; older copies don't describe
+Update to the latest version (v0.9) whenever you update Kadvia; older copies don't describe
 the newer tools.
 
 ## Privacy
