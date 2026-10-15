@@ -44,7 +44,7 @@ AI assistant how to use it well:
   faces** by highlighting them in your Kadvia window;
 - save `.kadvia` / `.kasm` / `.kdraw`, or export STEP, STL, 3MF, OBJ or a sketch as DXF.
 
-> Status: preview (v0.10). Adds install guidance when Kadvia is missing, loft end conditions (tangent/curvature), boundary surfaces with guides, curvature-continuous fillets, and surface analysis to verify G1/G2 seams. Parametric modeling (sketch, extrude, revolve, holes, fillets and
+> Status: preview (v0.10). Adds install guidance when Kadvia is missing, loft end conditions (tangent/curvature), boundary solids through sections and guide curves, curvature-continuous fillets, and surface analysis to verify G1/G2 seams. Parametric modeling (sketch, extrude, revolve, holes, fillets and
 > chamfers including mixed convex/concave corners, patterns, mirror, loft, sweep, shell, draft),
 > hole wizard and threads, sketch tools and DXF import/export, materials, appearances and
 > product renders, reference images, imported-STEP editing (mesh-only bodies kept), assemblies
