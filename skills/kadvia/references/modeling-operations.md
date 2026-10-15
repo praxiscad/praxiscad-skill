@@ -235,6 +235,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 - **Sharp edges only, tangent chains.** Tangent-continuous seams (cylinder seams, lines splitting a flat face, fillet boundaries) are skipped by broad selectors (the feature message gives the count); `near` picks the nearest sharp edge; naming a seam in `ids` is an error. A blend cannot stop where its edge runs on tangentially into another sharp edge, so one arc of a circular rim, of a tangent outline or of a cross-hole mouth is enough: the feature is retried along the whole chain and the message lists the edges it blended. Ends joined tangentially to another selected edge need no extra length; other ends need about one radius. A too-short edge is reported by id with its length and the largest size it allows.
 - **What blends:** any set of edges where at most two selected edges meet at a vertex, including tangent chains (rounded-rectangle outlines, rims of revolved parts), circular edges between a plane and a cylinder (convex rims, concave boss bases), edges ending at a concave corner, and the seams of booleans between curved faces (a boss on a cylinder, a cross hole).
 - **Corners work** between flat faces with straight edges: `{"all": true}` on a block or prism (three convex edges meet in a spherical corner patch; chamfers meet in a point), pocket corners (three concave edges), **and mixed corners**: convex and concave edges at one vertex (`{"all": true}` on an L-bracket), four or more edges at a vertex (a pyramid apex) or two blends meeting a sharp edge get a smooth corner patch tangent to the blends.
+- **Fillet `profile`:** `"circular"` (default, G1) or `"curvature"` (G2: same contact lines, flatter start, removes less). G2 needs straight edges between flat faces; a three-edge corner gets a G1 patch (with a warning); curved edges error.
 - **Refused** (`geometry` error): corners where three or more selected edges meet and one of those edges is **curved** or one of the faces there is not flat (fillet the curved edges in a separate feature); sizes too large for the neighbouring faces ("the size is too large …").
 
 ### linear_pattern / circular_pattern / mirror
@@ -269,6 +270,15 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 - Each section has exactly **one region** (holes are allowed if every section has the same number).
 - `ruled: false` (default) is smooth through all sections; `true` is straight between consecutive sections.
 - For predictable results use the same profile kind or segment count in every section (circles, rects and rounded rects map well).
+- `startCondition` / `endCondition` (smooth loft only): `{"type": "none"|"normal"|"tangent"|"curvature", "weight": 1}`. `normal` is square to the section plane; `tangent` (G1) and `curvature` (G2) need the section sketched on a body face with its outline on that face's edges, and continue the faces meeting there (operation `add`). `weight` scales the effect. Verify seams with `analyze_surfaces` (see [surface-analysis.md](surface-analysis.md)).
+
+### boundary
+```json
+{"id": "hood", "type": "boundary", "sections": ["top_outline", "end_sk"], "guides": ["side_l", "side_r"],
+ "startCondition": {"type": "tangent", "weight": 1}}
+```
+- `sections`: 2 or more closed sketches (matched as in loft). `guides` (optional): sketches with one open chain each that pass through every section outline; the surface follows each one (single-loop sections only). Without guides the surface is smooth through all sections. End caps are planar.
+- `startCondition` / `endCondition` as for loft; guides must leave tangent to the target face. Check G1/G2 seams with `analyze_surfaces`.
 
 ### sweep
 ```json
