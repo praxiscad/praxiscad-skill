@@ -102,7 +102,7 @@ Edits apply in order to the **solved** geometry. Each is an object with `edit`:
 | `trim` | `entity`, `at` | Removes the piece between the intersections nearest `at` (no intersection: deletes the entity). Circles become arcs, ellipses elliptical arcs. Power trim = one `trim` per crossed entity |
 | `extend` | `entity`, `at` | Extends the line/arc end nearest `at` to the next entity |
 | `split` | `entity`, `at` | Splits an open curve at that point |
-| `offset` | `entities`, `distance`, `side?` (a point on the wanted side), `both?`, `cap?` (`"arc"`, `"line"`, `"none"`), `constructionBase?` | Connected entities offset as a chain, corners extended or rounded. Closed chains go outward without `side`; open chains to the left of the first entity |
+| `offset` | `entities`, `distance`, `side?` (a point on the wanted side), `both?`, `cap?` (`"arc"`, `"line"`, `"none"`), `constructionBase?` (canonical; `construction_base` is accepted too) | Connected entities offset as a chain, corners extended or rounded. Closed chains go outward without `side`; open chains to the left of the first entity |
 | `fillet` | `corner` (shared end, e.g. `"l1.end"`), `radius`, `dimension?` | Rounds the corner of two lines/arcs (adds tangent relations; `dimension: true` adds the R dimension) |
 | `chamfer` | `corner`, `distance`, `distance2?` or `angle?` | Chamfers the corner of two lines |
 | `mirror` | `entities`, `axis` (`"x_axis"`, `"y_axis"` or a line id) | Mirrored copies with symmetric relations |
@@ -158,7 +158,7 @@ pocket that follows an existing contour.
 ```
   - The format is DXF when `sketch` is given and the path ends in `.dxf` or has no extension (`.dxf` is added); `"format": "dxf"` says it explicitly.
   - It writes the **solved** entities of that sketch in sketch coordinates (mm, 1:1), as DXF R12: lines, arcs, circles and points; splines, ellipses and text outlines as polylines. Normal geometry goes on layer `SKETCH`, construction geometry on layer `CONSTRUCTION` (tell the user to ignore or delete that layer for cutting).
-  - Parts only, and the sketch needs `entities`: a sketch made only of `profiles` (rect, circle, …) can't be exported. A drawing with views, dimensions and a title block goes through `kadvia:export_drawing` instead.
+  - Parts only. Sketches made of `profiles` (rect, circle, …) export too. A drawing with views, dimensions and a title block goes through `kadvia:export_drawing` instead.
   - Typical round trip: `kadvia:import_dxf` → edit the sketch (`edit_sketch` offset, fillet) → export it again as DXF for the cutter.
 
 ## 9. Worked example: engrave text 0.5 mm deep

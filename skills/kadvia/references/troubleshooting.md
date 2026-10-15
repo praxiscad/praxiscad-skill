@@ -10,7 +10,9 @@
 | `parse` | The file is not valid STEP or `.kadvia` | Ask the user for a re-export from their CAD tool (AP214 or AP242) |
 | `geometry` | No displayable bodies, or import failed | Render, report what is visible, suggest re-export |
 | `panic` | The kernel hit geometry it cannot handle | The app is fine; report the file name to the user |
-| `timeout` | The window did not answer in time | Retry once; very large files may need longer |
+| `still_running` | The change is still running in Kadvia (reply names an operation id); **not rolled back** | Do **not** resend. `kadvia:operation_status {operation_id, wait_seconds: 60}` until `committed` / `failed` / `cancelled` |
+| `busy` | Another change to this model is still running; **nothing was applied** | Wait with `kadvia:operation_status`, then send your change again |
+| `timeout` | The app did not answer in time; the change may still be running | Check `kadvia:kadvia_status` (`busy`) or `kadvia:operation_status` first; resend only with the same `request_id` |
 | Warning "faces could not be tessellated" | Some faces will be missing from the display | Render and describe gaps; volume may be omitted |
 | Warning "entities could not be converted" | Some STEP data was skipped | Usually colours/annotations; geometry may still be complete |
 | Volume missing | Body is not a closed solid (surfaces or gaps) | Say so; do not invent a value |
@@ -34,7 +36,7 @@ that operation and resend the **whole corrected batch**.
 | Volume unchanged after a cut | The cut went into air (wrong direction or plane) | Flip `direction`; check the plane offset sign |
 | bbox twice/half the expected size | Radius vs diameter mix-up, symmetric vs normal extrude, wrong parameter | Read `kadvia:get_part`, fix the parameter |
 | Two bodies where one was expected | A feature used `"operation": "new"`, or a boss does not touch the body | Use `"add"`; overlap by 0.5–1 mm |
-| Timeout during modeling | Heavy regeneration (many fillets/patterns) | `kadvia:get_part` to see whether the revision changed before retrying; split the batch |
+| Timeout during modeling | Heavy regeneration (many fillets/patterns, big imports) | Never resend blindly: `kadvia:operation_status` (or `kadvia_status` `busy`) and the `revision` in `kadvia:get_part`; use a `request_id` on retries; split the batch |
 | `undo` says nothing to undo | No committed change since the part was opened | Fine; nothing to revert |
 | Features show `skipped` / "rolled back" | The rollback bar is above them | `{"op": "set_rollback"}` rolls forward to the end |
 

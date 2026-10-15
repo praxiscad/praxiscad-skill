@@ -232,6 +232,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 {"id": "top_chamfer", "type": "chamfer", "edges": {"plane": "max_z", "type": "line"}, "distance": 0.5}
 ```
 - Constant radius / equal distance.
+- **Sharp edges only, tangent chains.** Tangent-continuous seams (cylinder seams, lines splitting a flat face, fillet boundaries) are skipped by broad selectors (the feature message gives the count); `near` picks the nearest sharp edge; naming a seam in `ids` is an error. A blend cannot stop where its edge runs on tangentially into another sharp edge, so one arc of a circular rim, of a tangent outline or of a cross-hole mouth is enough: the feature is retried along the whole chain and the message lists the edges it blended. Ends joined tangentially to another selected edge need no extra length; other ends need about one radius. A too-short edge is reported by id with its length and the largest size it allows.
 - **What blends:** any set of edges where at most two selected edges meet at a vertex, including tangent chains (rounded-rectangle outlines, rims of revolved parts), circular edges between a plane and a cylinder (convex rims, concave boss bases), edges ending at a concave corner, and the seams of booleans between curved faces (a boss on a cylinder, a cross hole).
 - **Corners work** between flat faces with straight edges: `{"all": true}` on a block or prism (three convex edges meet in a spherical corner patch; chamfers meet in a point), pocket corners (three concave edges), **and mixed corners**: convex and concave edges at one vertex (`{"all": true}` on an L-bracket), four or more edges at a vertex (a pyramid apex) or two blends meeting a sharp edge get a smooth corner patch tangent to the blends.
 - **Refused** (`geometry` error): corners where three or more selected edges meet and one of those edges is **curved** or one of the faces there is not flat (fillet the curved edges in a separate feature); sizes too large for the neighbouring faces ("the size is too large …").
@@ -248,7 +249,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 ```json
 {"id": "rib_mirror", "type": "mirror", "features": ["rib"], "plane": {"base": "YZ", "offset": 0}}
 ```
-- You can pattern `extrude` (add or cut), `hole`, primitive, `loft` and `sweep` features. Patterns can't repeat other patterns or mirrors; `shell`, `draft`, `import` and the direct edits can't be patterned or mirrored.
+- You can pattern `extrude` (add or cut), `hole`, primitive, `loft` and `sweep` features, or the id of an earlier pattern or mirror: a mirror of a linear pattern mirrors the whole array, a circular pattern of a linear pattern repeats the whole row. `shell`, `draft`, `import` and the direct edits can't be patterned or mirrored.
 - `count` **includes the original**.
 - `circular_pattern` with the default `angle` (360) spaces the copies evenly.
 
@@ -256,6 +257,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 ```json
 {"id": "datum1", "type": "plane", "face": {"plane": "max_z"}, "offset": 15}
 ```
+- A face plane may be several coplanar faces that touch along edges (the top of a revolved part split into quarters counts as one plane); separate coplanar faces need `near`.
 - The plane fields written flat (`base` / `face` + `body` / `origin` + `normal` + `xDir` / `ref`, plus `offset`). It creates no geometry; sketches, holes and mirrors use it with `{"ref": "datum1"}`.
 
 ### loft
@@ -263,6 +265,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 {"id": "transition", "type": "loft", "sections": ["sec_bottom", "sec_mid", "sec_top"], "ruled": false}
 ```
 - `sections`: 2 or more sketch ids in loft order (for example `XY` sketches at increasing `offset`). Sections must not intersect each other.
+- Closed spline sections work (a closed spline is one loop). Loft sections are lines and arcs only (splines are approximated as fine arcs).
 - Each section has exactly **one region** (holes are allowed if every section has the same number).
 - `ruled: false` (default) is smooth through all sections; `true` is straight between consecutive sections.
 - For predictable results use the same profile kind or segment count in every section (circles, rects and rounded rects map well).
@@ -287,6 +290,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 {"id": "hollow", "type": "shell", "thickness": "wall", "openFaces": {"normal": "+Z"}}
 ```
 - Offsets every face of the target body **inward** by `thickness`. `openFaces` (a face selector) removes faces, for example the top of an enclosure; omit it for a closed hollow body.
+- Errors name the face, point and radius that blocks the shell. If the real radius is smaller than the wall, reduce `thickness` or open other faces (or enlarge the radius). Shell works on lofted bodies; curved faces are offset by a B-spline fit (tolerance in the message).
 - Fillet outer edges **before** the shell (radius > thickness); cut holes and add bosses after it.
 
 ### draft
@@ -405,11 +409,11 @@ matches the app's live `kadvia:modeling_reference`; when the two disagree, the l
 | Area | Works (with restrictions) | Refused / not available |
 |---|---|---|
 | **Fillets / chamfers** | Constant radius or distance. Tangent chains, rims, boss bases, boolean seams between curved faces; corners between **flat** faces with straight edges: all-convex (spherical patch), all-concave (pocket), **mixed convex/concave** (an L-bracket with `{"all": true}`), four or more edges at a vertex (smooth corner patch) | Corners where three or more selected edges meet and one of them is curved, or a face there is curved (fillet the curved edges in a separate feature); sizes too large for the neighbouring faces. No variable radius |
-| **Spheres and booleans** | `add`/`cut`/`intersect` with boxes, cylinders, spheres; domes and capsules tangent along a rim; single-point contact (`add` gives two touching bodies, `cut` changes nothing); identical bodies (`add`/`intersect` return the body); one body inside another; re-cutting an existing hole | Partial overlap along a shared curved face (two coaxial same-radius cylinders overlapping partly): "share part of a curved face"; `cut` of identical bodies: "empty result" |
-| **Patterns / mirrors** | `extrude`, `hole`, primitives, `loft`, `sweep` | Patterns of patterns or mirrors; `shell`, `draft`, `import` and the direct edits |
-| **Shell** | Open faces may be adjacent or have holes; planar faces exact, curved faces offset by a B-spline approximation (tolerance in the feature message) | Thickness ≥ the smallest convex radius or ≥ half the thinnest section; open faces tangent to a face that stays closed; faces with a pole (spheres, cone tips) |
+| **Spheres and booleans** | `add`/`cut`/`intersect` with boxes, cylinders, spheres; domes and capsules tangent along a rim; single-point contact (`add` gives two touching bodies, `cut` changes nothing); identical bodies (`add`/`intersect` return the body); one body inside another; re-cutting an existing hole | Partial overlap along a shared curved face (two coaxial same-radius cylinders overlapping partly): "share part of a curved face" (make one 0.01 mm larger); a union where a body touches itself along a tangent line is still refused; `cut` of identical bodies: "empty result" |
+| **Patterns / mirrors** | `extrude`, `hole`, primitives, `loft`, `sweep`, and a pattern or mirror of an earlier pattern/mirror | `shell`, `draft`, `import` and the direct edits |
+| **Shell** | Open faces may be adjacent or have holes; planar faces exact, curved faces offset by a B-spline approximation (tolerance in the feature message) | Thickness ≥ the smallest convex radius or ≥ half the thinnest section (the error names the face, point and radius); open faces tangent to a face that stays closed; faces with a pole (spheres, cone tips) |
 | **Draft** | Planar faces hinged on the neutral plane; `draftAngle` on extrudes (every direction; walls shrink or grow) | Faces perpendicular to `pull`; a face or edge that would collapse ("draft too large"); `draftAngle` with `through` |
-| **Loft** | 2+ sections on any planes; holes if every section has the same number | Intersecting sections; several regions in one section |
+| **Loft** | 2+ sections on any planes; holes if every section has the same number | Intersecting sections; several regions in one section; sections other than lines/arcs (closed spline sections are fine) |
 | **Sweep** | Lines and arcs with tangent junctions, line→line mitres, closed tangent loops, helices | Non-tangent arc junctions; a helix profile wider than one pitch or reaching the axis |
 | **Sheet metal** | A uniform-thickness solid checked by `kadvia:check_design` (see [design-rules.md](design-rules.md)) | Bend, flange or unfold features |
 | **Threads** | Cosmetic by default; modeled 60° threads (slow) | Pipe (NPT/BSP), tapered and multi-start threads; modeled threads crossing other features may fail (see [holes-threads.md](holes-threads.md#10-limits)) |

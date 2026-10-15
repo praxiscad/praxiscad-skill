@@ -38,7 +38,7 @@ works on parts and imported models. Per body it returns:
 - `fillets[]`: radius, `convex` (a round on an outside edge) or concave (a fillet in an inside corner), face ids, `near`;
 - `chamfers[]`: width, `distance` (the leg on each neighbour), face ids, `near`. A chamfer is a narrow planar strip between two planar faces, tilted by the same angle (10–80°) against both, i.e. bisecting their corner. A strip at 90° to both neighbours (the end of a rib between two parallel faces) or a coplanar step is reported as a plane, not a chamfer, so chamfer distances are real ones;
 - with `include_planes: true`, the largest planar faces (normal, area, a point).
-- Mesh-only bodies are skipped with a note.
+- Mesh-only bodies are skipped with a note. The conversion warning names each mesh-only body and the reason it stayed view-only.
 
 Use face ids for an edit in the same session (`{"ids": [...]}`), and `near` points or
 geometric filters in features you'll keep: ids change after `delete_face` and on

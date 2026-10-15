@@ -35,14 +35,15 @@ AI assistant how to use it well:
   faces** by highlighting them in your Kadvia window;
 - save `.kadvia` / `.kasm` / `.kdraw`, or export STEP, STL, 3MF, OBJ or a sketch as DXF.
 
-> Status: preview (v0.7). Parametric modeling (sketch, extrude, revolve, holes, fillets and
+> Status: preview (v0.8). Parametric modeling (sketch, extrude, revolve, holes, fillets and
 > chamfers including mixed convex/concave corners, patterns, mirror, loft, sweep, shell, draft),
 > hole wizard and threads, sketch tools and DXF import/export, materials, appearances and
 > product renders, reference images, imported-STEP editing (mesh-only bodies kept), assemblies
 > with sub-assemblies, motion mates, mate suggestions and motion previews, 2D drawings of parts
 > and assemblies with tolerances, GD&T, hole callouts, BOM and collision-free balloons, design
 > check with feature-aware hole sizes, viewing (per-model renders, isolated bodies, custom
-> angles, perspective, sections), selection highlighting, rebuild and inspection.
+> angles, perspective, sections), selection highlighting, rebuild and inspection, and safe
+> handling of long operations (request ids, operation status, no blind retries). Matches Kadvia 0.3.5.
 
 The Kadvia MCP server already sends core instructions to every client, so this repository is
 optional — it makes results better (design rules, workflows, worked examples).

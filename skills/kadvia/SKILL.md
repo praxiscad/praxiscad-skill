@@ -3,7 +3,7 @@ name: kadvia
 description: Designs, edits and inspects mechanical CAD in the Kadvia desktop app through its MCP server. Builds parametric parts from text, photos, drawings or DXF files (sketches with splines and text, extrudes, revolves, tapped/counterbored holes, threads, fillets, patterns, lofts, sweeps, shells; named parameters), traces calibrated reference images, edits imported STEP files (resize holes, remove fillets), assembles parts with mates (gears, cams, limits; DOF, motion, BOM, interference), makes 2D drawings (tolerances, GD&T, BOM, balloons; PDF/DXF/SVG), assigns materials and looks for mass and product renders, and checks manufacturability for CNC, 3D printing, molding and sheet metal. Verifies with exact mass and per-model renders from any angle; highlights faces; saves .kadvia/.kasm/.kdraw or exports STEP/STL/3MF/OBJ and sketch DXF. Use when the user asks to model, design, modify, measure, assemble, draw, render, check or export a CAD part, STEP or DXF file, shares an image of a part to rebuild, or mentions Kadvia.
 compatibility: Requires the Kadvia desktop app (macOS or Windows) running, with its MCP server ("kadvia") connected to an MCP-capable AI client.
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Kadvia
@@ -36,10 +36,10 @@ Details: [references/views-and-conventions.md](references/views-and-conventions.
 ## Tools
 | Tool | Use it to |
 |---|---|
-| `kadvia:kadvia_status` | Check the app is running; list open models and their `kind` |
+| `kadvia:kadvia_status` | Check the app is running; list open models and their `kind`, running changes (`busy`), `unsavedModels` and each unsaved model's `autosave` state (warn the user and offer to save if a model has unsaved work) |
 | `kadvia:new_part` | Start a new, empty parametric part (opens in the user's window) |
 | `kadvia:get_part` | Read a part: parameters, features with ids, feature status, bodies, revision |
-| `kadvia:modeling_reference` | Exact fields for every op, feature, profile and selector, with examples (topics include `holes`, `sketch_tools`, `materials`, `assemblies`, `drawings`, `references`, `design_check`, `imported`) |
+| `kadvia:modeling_reference` | Exact fields for every op, feature, profile and selector, with examples (topic `all`, the default, is a short topic index with sizes; `full` is everything, about 16k tokens, so read the topics you need; topics include `holes`, `sketch_tools`, `materials`, `assemblies`, `drawings`, `references`, `design_check`, `imported`) |
 | `kadvia:apply_operations` | **The modeling tool**: a batch of operations as one transaction (one undo step) |
 | `kadvia:set_parameters` | Change named dimensions: `{"width": 90}` |
 | `kadvia:solve_sketch` / `kadvia:edit_sketch` | Check a constrained sketch / preview sketch edits (trim, offset, fillet, mirror, patterns, …) without changing the part |
@@ -56,10 +56,11 @@ Details: [references/views-and-conventions.md](references/views-and-conventions.
 | `kadvia:mate_options` / `kadvia:solve_assembly` | Which mate types fit two references / preview motion by dragging a component (nothing committed) |
 | `kadvia:assembly_bom` / `kadvia:check_interference` | Bill of materials (`structure`: `top`, `indented`, `flat`); overlapping components |
 | `kadvia:new_drawing` / `kadvia:get_drawing` / `kadvia:apply_drawing_operations` / `kadvia:export_drawing` | 2D drawings of parts, assemblies or STEP models: create, read edge ids, edit (sheets, dimensions, tolerances, GD&T, BOM, balloons), write PDF/DXF/SVG |
-| `kadvia:save_part` / `kadvia:export_model` | Write `.kadvia`/`.kasm`/`.kdraw` / STEP, STL, 3MF or OBJ, or one sketch as DXF (`sketch`) (only when the user asks or agrees) |
+| `kadvia:save_part` / `kadvia:export_model` | Write `.kadvia`/`.kasm`/`.kdraw` (the result gives the absolute `path`, saved `revision`, `bytes` and `sha256`: check them) / STEP, STL, 3MF or OBJ, or one sketch as DXF (`sketch`) (only when the user asks or agrees) |
 | `kadvia:list_models` / `kadvia:get_model_info` | Bodies, faces, edges, bbox, volume, warnings of any model |
 | `kadvia:set_view` / `kadvia:fit_view` / `kadvia:set_display_mode` | Present things in the user's viewport: standard `view` or a direction `from`, `projection`, section view on/off, `model_id` to fit one model; zoom to fit; display mode |
 | `kadvia:get_selection` / `kadvia:set_selection` | What the user clicked (faces, edges, vertices with their `point`, bodies) / highlight faces, edges, vertices or bodies for the user (replaces their selection; `[]` clears) |
+| `kadvia:operation_status` | Outcome of a change that answered `still_running`, timed out or shows under `busy`: wait (up to 120 s per call), inspect or cancel it. See "Long operations and retries" |
 | `kadvia:close_model` | Remove a model from the window (confirm first; save before closing). **Never** close the user's models to get a clean render: use `render_views` `model_id` / `isolate` instead |
 
 ## Modeling checklist (copy it and tick it off)
@@ -105,6 +106,7 @@ the rollback bar and known limits): [references/modeling-operations.md](referenc
 7. **Fillets and chamfers:**
    - Inside corners of an L-shape get radius `r` and the matching outside corner gets `r + thickness`, so the wall stays uniform.
    - Corners can be rounded in one feature: `{"all": true}` on a block gives spherical corners, and it also works on an L-bracket (where convex and concave edges meet, the corner gets a smooth patch). Only corners where three or more selected edges meet and one of them is **curved** are refused: fillet the curved edges in a separate feature.
+   - One arc of a circular rim, of a tangent outline or of a cross-hole mouth is enough: the blend extends along the whole tangent chain and the message lists the edges it blended. Broad selectors (`all`, `parallel`, ...) skip smooth seams (cylinder seams, lines splitting a flat face) and report how many; `near` picks the nearest sharp edge, and naming a seam in `ids` is an error.
    - For CNC, inside vertical corners need at least the tool radius (≥ 1 mm, 3 mm is typical).
    - For 3D printing, chamfer bottom edges (no overhang) and fillet top edges.
    - Apply small cosmetic edge breaks (0.5–1 mm) last.
@@ -227,8 +229,9 @@ Worked example (anodised blue aluminium product render), finishes, precedence an
 
 ## Design check
 - Run `kadvia:check_design {"model_id": ..., "process": ...}` when a design is done or the user asks whether it can be made. Processes: `cnc`, `print_fdm`, `print_sla`, `injection`, `sheet_metal`, `general`. Ask which one if unclear; pass `build_direction` and `params` (for example `{"toolRadius": 1.5}`) when known.
-- Explain errors, then warnings, with `value` vs `limit` and where. Infos are advice.
-- `holes[]` lists every detected hole with `through`, `standard` and, for wizard holes, the `feature` id (blind/through and the size then come from the feature, as in `kadvia:recognize_features` and the drawing callouts). A diameter that fits several table entries is reported as ambiguous, for example `"Ø5.5 (M5 clearance (medium) or M2.5 counterbore)"` with `standardCandidates`: tell the user the options instead of picking one.
+- Explain errors, then warnings, with `value` vs `limit` and where. Infos are advice. `groups` collapses repeated issues per rule (count, value range, features): report the groups, not every occurrence. `checks.performed` / `checks.notPerformed` (with reasons) say what was and was not checked: tell the user what was skipped. An `issue.feature` names the feature that made it.
+- `stats`: `minWall`, `maxWall` (the largest **local** thickness, not the part size), `size` (bounding box) and `buildExtent` (extent along the build or tool direction). A warning on a self-intersecting face boundary means the exported STEP may be rejected by other CAD tools: fix the feature that made it.
+- `holes[]` lists every detected hole with `through`, `standard` and, for wizard holes, the `feature` id (blind/through and the size then come from the feature, as in `kadvia:recognize_features` and the drawing callouts). A hole known only by its diameter has `identity: "diameter"` and the ISO sizes it matches in `standardCandidates`; a coincident diameter is not design intent, so never present a candidate as the hole's identity: tell the user the options instead of picking one.
 - Propose a fix in the feature or parameter that made the face (`location.point` works in `near` selectors), **ask before changing the design**, then run the check again.
 
 Rules, limits and a worked fix loop: [references/design-check.md](references/design-check.md).
@@ -257,12 +260,18 @@ Always compute a rough hand estimate first. A result 2× off means a wrong plane
 
 Views, directions and section details: [references/views-and-conventions.md](references/views-and-conventions.md#custom-directions-projection-and-sections).
 
+## Long operations and retries
+- Every change (`apply_operations`, `set_parameters`, assembly and drawing batches, imports, undo/redo, rebuilds) gets an `operationId`. For anything that may be slow (big imports, many components, heavy booleans) pass your own unique `request_id`: a repeated id is never applied twice, it returns the first call's result.
+- After about 150 s the app answers `still_running` with the operation id: the change is **not rolled back** and will commit or fail on its own. **Do not resend it.** Call `kadvia:operation_status {"operation_id": "op12", "wait_seconds": 60}` (max 120 per call; `request_id` works instead of the id) until it says `committed` (with the new `revision`), `no_change`, `failed` or `cancelled`. `cancel: true` stops it before it commits.
+- `busy` means another change to that model is still running and **yours was not applied**: wait with `operation_status`, then send it again. `kadvia:kadvia_status` and `kadvia:get_model_info` list running changes under `busy`. Reads never wait; they show the last committed revision.
+- **Never blindly retry after a timeout or lost connection.** Check `operation_status` / `kadvia_status` `busy` and the `revision` in `kadvia:get_part` first; resend only with the same `request_id`.
+
 ## When something fails
 - A failed `kadvia:apply_operations` (or assembly/drawing batch) changes **nothing**. The error gives the `code`, a message, the failing operation (`opIndex`) and feature or mate (`featureId`), plus a hint.
   - Fix that operation and resend the corrected batch. Don't resend only the tail, because the earlier operations were rolled back too.
   - `geometry`: the fillet is too large, the selector matched nothing, a cut misses the body, or a profile is open or self-intersecting. Reduce sizes, change the selector, or split the batch to isolate the cause.
   - `bad_request`: wrong field, unknown id, bad expression, undefined parameter, unknown hole size or material name (the message lists valid choices). Call `kadvia:get_part` and `kadvia:modeling_reference`.
-- After a timeout or lost connection, call `kadvia:get_part` and check the `revision` before retrying.
+- After a timeout, `still_running` or lost connection, follow "Long operations and retries" above before sending anything again.
 - *Kadvia is not running* → ask the user to open the app.
 
 More: [references/troubleshooting.md](references/troubleshooting.md).
