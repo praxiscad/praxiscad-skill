@@ -1,4 +1,13 @@
-# Kadvia — AI instructions & skill
+# Kadvia — Text-to-CAD and Image-to-CAD with any AI assistant (MCP skill)
+
+**Describe a part in plain words, or show your AI a sketch or photo, and get a real, editable
+parametric 3D CAD model** — with STEP/STL export, 2D drawings, assemblies and manufacturability
+checks. This is the open skill and instruction set for **Kadvia**, an AI-native desktop CAD app
+for macOS and Windows with a built-in MCP (Model Context Protocol) server.
+
+> Example prompts: *"Make a 60 × 40 × 5 mm aluminium mounting plate with four M4 clearance holes
+> 6 mm from each corner."* · *"Here is a photo of my broken bracket — model a replacement I can
+> 3D print."* · *"Open this STEP file, enlarge the bore to 12 mm and export it again."*
 
 Design, edit and check CAD parts by chatting with **any AI assistant** that supports MCP —
 Claude, ChatGPT/Codex, Gemini, Cursor, VS Code Copilot, Windsurf, LM Studio with local models,
@@ -151,3 +160,18 @@ still get every number (bounding box, volume, mass).
 - "Show me the underside in perspective, and turn on a section through the bore."
 - "Render the housing without its lid so I can see the bosses — leave my other parts open."
 - "I re-exported the linked STEP file — rebuild the part."
+
+## FAQ
+
+**Is this text-to-CAD?** Yes. Your AI assistant turns a written description into a parametric
+model in Kadvia, with named dimensions you can change later, not a one-off mesh.
+
+**Is this image-to-CAD?** Your AI assistant reads a photo, sketch or drawing and builds the model
+in Kadvia; you can also trace a calibrated reference image. Accuracy depends on the dimensions you
+give.
+
+**Which AI assistants work?** Any assistant or agent that supports MCP tools. The skill is
+model-agnostic, and you use your own AI subscription; Kadvia does not charge for AI usage.
+
+**What file formats?** STEP import/export, STL, 3MF and OBJ export, DXF import/export, and PDF, DXF
+or SVG drawings.
