@@ -58,7 +58,7 @@ Details: [references/views-and-conventions.md](../skills/kadvia/references/views
 | `kadvia_status` | Check the app is running; list open models and their `kind`, running changes (`busy`), `unsavedModels` and each unsaved model's `autosave` state (warn the user and offer to save if a model has unsaved work) |
 | `new_part` | Start a new, empty parametric part (opens in the user's window) |
 | `get_part` | Read a part: parameters, features with ids, feature status, bodies, revision |
-| `modeling_reference` | Exact fields for every op, feature, profile and selector, with examples (topic `all`, the default, is a short topic index with sizes; `full` is everything, about 16k tokens, so read the topics you need; topics include `holes`, `sketch_tools`, `materials`, `assemblies`, `drawings`, `references`, `design_check`, `imported`) |
+| `modeling_reference` | Exact fields for every op, feature, profile and selector, with examples (topic `all`, the default, is a short topic index with sizes; `full` is everything, about 18k tokens, so read the topics you need; topics include `holes`, `sketch_tools`, `materials`, `assemblies`, `drawings`, `references`, `design_check`, `imported`, `surface_analysis`) |
 | `apply_operations` | **The modeling tool**: a batch of operations as one transaction (one undo step) |
 | `set_parameters` | Change named dimensions: `{"width": 90}` |
 | `solve_sketch` / `edit_sketch` | Check a constrained sketch / preview sketch edits (trim, offset, fillet, mirror, patterns, …) without changing the part |
@@ -69,6 +69,7 @@ Details: [references/views-and-conventions.md](../skills/kadvia/references/views
 | `list_materials` / `set_material` / `set_appearance` | Material library; assign a material (part, body, assembly component); colour and finish (part, body, faces; display only) |
 | `render_views` | See **one model** (`model_id`, default the active one; the user's other open models stay out of the images): 1–8 views, standard (`"iso"`, `"top"`, …) or custom directions `{"from": [x, y, z], "name"?}`; `isolate: {"bodies": [...]}` / `hide: [...]` pick bodies for these images only; `scene: true` for everything open; `projection` `ortho`/`persp`, optional section, reference images; `quality: "render"` for product shots |
 | `check_design` | Manufacturability check for a process, with locations and fixes |
+| `analyze_surfaces` | Surface continuity (G0/G1/G2 per edge), curvature, ripples and slivers against a spec; view it with `set_display_mode` `zebra` / `curvature` |
 | `open_step_file` | Open `.step`/`.stp` (imported), `.kadvia` (part), `.kasm` (assembly) or `.kdraw` (drawing) |
 | `convert_to_part` / `recognize_features` | Make an imported STEP editable; list holes (with wizard size and thread), bosses, fillets and chamfers |
 | `new_assembly` / `get_assembly` / `apply_assembly_operations` | Build and edit assemblies (components, sub-assemblies, mates) |
@@ -254,6 +255,14 @@ Worked example (anodised blue aluminium product render), finishes, precedence an
 - Propose a fix in the feature or parameter that made the face (`location.point` works in `near` selectors), **ask before changing the design**, then run the check again.
 
 Rules, limits and a worked fix loop: [references/design-check.md](../skills/kadvia/references/design-check.md).
+
+## Surface analysis (class A checks)
+- `analyze_surfaces {"model_id"?: ..., "spec": {"required": "G1"}}` measures how faces join: per edge the G0 gap (mm), G1 normal angle (degrees) and G2 relative curvature difference, the continuity achieved, whether it meets `spec.required` (`none`, `G0`, `G1`, `G2`) and the worst point; per face the curvature range, minimum radius, ripples, singular points and slivers. Ask which level the design needs; change tolerances only when the user gives them.
+- The reply is a short summary (counts per continuity, failing edges worst first with numbers, issues grouped by kind) plus JSON; long lists are capped, `report_path` writes the full report. Edge and face ids are per body: always pair them with `bodyId`.
+- Look at it: `set_display_mode {"mode": "zebra"}` (try `direction` horizontal too) or `"curvature"` (`kind`: `mean`, `maxAbs`, ...), then `render_views`; set `shaded-edges` when done. A stripe that kinks at an edge is a tangent break; a colour jump in the curvature map is a curvature break.
+- Passing continuity numbers is necessary, not sufficient for class A (highlight flow, even curvature, no waviness inside a face): show the renders, explain the findings, propose fixes in the responsible feature, ask before changing the design, then re-run.
+
+Tolerances, reading the result and the workflow: [references/surface-analysis.md](../skills/kadvia/references/surface-analysis.md).
 
 ## Verification: what to check
 | After | Check numerically | Check visually (`render_views`) |

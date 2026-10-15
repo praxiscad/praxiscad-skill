@@ -61,6 +61,8 @@ A "top plane" is Kadvia `XY`, a "front plane" is Kadvia `XZ` and a "right plane"
 | `shaded` | Smooth surfaces, colours and finishes set with `kadvia:set_appearance` |
 | `wireframe` | Seeing internal edges and hidden features |
 | `hidden-lines` | Drawing-like line views |
+| `zebra` | Reflection stripes to judge continuity and highlight flow (`stripes`, `width`, `direction`, `invert`); see [surface-analysis.md](surface-analysis.md) |
+| `curvature` | Curvature colour map of the active model (`kind`: `gaussian`, `mean`, `max`, `min`, `maxAbs`; `min`/`max` range); the next `kadvia:render_views` shows it. Set `shaded-edges` again when done |
 
 ## Screenshot tips (`kadvia:render_views`)
 - Default 800×600 is enough for shape checks; use 1200–2048 px only for small details.
