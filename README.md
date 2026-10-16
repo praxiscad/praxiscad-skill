@@ -52,7 +52,7 @@ AI assistant how to use it well:
 > and assemblies with tolerances, GD&T, hole callouts, BOM and collision-free balloons, design
 > check with feature-aware hole sizes, viewing (per-model renders, isolated bodies, custom
 > angles, perspective, sections), selection highlighting, rebuild and inspection, and safe
-> handling of long operations (request ids, operation status, no blind retries). Matches PraxisCAD 0.3.8.
+> handling of long operations (request ids, operation status, no blind retries). Matches PraxisCAD 0.4.0.
 
 The PraxisCAD MCP server already sends core instructions to every client, so this repository is
 optional — it makes results better (design rules, workflows, worked examples).
