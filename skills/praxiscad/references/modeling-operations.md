@@ -266,7 +266,7 @@ Profiles are closed shapes. A profile completely inside another profile of the s
 {"id": "transition", "type": "loft", "sections": ["sec_bottom", "sec_mid", "sec_top"], "ruled": false}
 ```
 - `sections`: 2 or more sketch ids in loft order (for example `XY` sketches at increasing `offset`). Sections must not intersect each other.
-- Closed spline sections work (a closed spline is one loop). Loft sections are lines and arcs only (splines are approximated as fine arcs).
+- Sections may contain sketch splines: a spline stays exact (one cubic span between consecutive fit points) and a closed spline is one loop. Closed fit splines with the same number of points in every section match point to point (spline to circle also works); otherwise every loop is split at shared normalised arc-length positions, so use the same profile kind or segment count for predictable results.
 - Each section has exactly **one region** (holes are allowed if every section has the same number).
 - `ruled: false` (default) is smooth through all sections; `true` is straight between consecutive sections.
 - For predictable results use the same profile kind or segment count in every section (circles, rects and rounded rects map well).

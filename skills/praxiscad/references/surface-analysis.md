@@ -40,13 +40,19 @@ surfaces 0.1 degrees or less and 5-10 % curvature. Use the user's numbers when g
 ## 3. Reading the result
 - `summary.byContinuity` counts edges by level; `failingEdges` is worst first with `worstPoint`.
 - `notableFaces` lists slivers, ripples (curvature that oscillates inside a face) and singular points.
-- `issueGroups` counts by kind; `*NotListed` fields say how many entries were left out.
+- `issueGroups` (the app's `summary.groups`) groups issues by kind, severity and rule with `count`, `minValue`..`maxValue`, `unit` and a ready-made `message`. Rules: gap, nearMiss, belowRequired, internalContinuity, internalCrease, sliver, ripple, singularity, nonManifold, evaluation. Report the groups; `issues` then holds one example per group and `issuesNotListed` counts the rest (all of them are in the `report_path` file).
+- Internal knot lines: a spline face can be creased or only G1 inside. `internalContinuity` (`G2` smooth, `G1`, `G0` creased), `internalAngleDeg`, `internalCurvatureJump` and `knotJumps` (points) describe it; the matching issue has a `faceId` but no `edgeId` (select the face, not an edge). Such a face is listed first in `notableFaces`.
+- `maxCurveOffsetMm` on an edge: the edge curve itself lies that far off its face (a tolerant edge in the source geometry, common in imported STEP). Above `g0_gap_mm` this is a data-quality problem of the source model, not a design choice: say so instead of proposing a blend.
+- `*NotListed` fields say how many entries were left out.
 - Only exact B-rep faces are analysed; mesh-only bodies give an info issue.
 
 ## 4. Looking at it
 1. `praxiscad:set_display_mode {"mode": "zebra"}` then `praxiscad:render_views` (iso and a side view); repeat with `"direction": "horizontal"`.
 2. `praxiscad:set_display_mode {"mode": "curvature", "kind": "mean"}` then `praxiscad:render_views`.
+   `kind`: `mean` for flow, `maxAbs` for tight radii, `gaussian` for dome versus saddle. A colour jump at an edge is a curvature break; speckle is ripple.
 3. `praxiscad:set_display_mode {"mode": "shaded-edges"}` when done.
+
+The user can also open **Inspect → Surface Analysis** in PraxisCAD: the same continuity report as a panel (G0/G1/G2 across edges, creases inside faces, edge-curve offsets), plus curvature combs on edges. Combs are a window feature; use `analyze_surfaces` and the display modes for your own checks.
 
 ## 5. Workflow
 Analyze with the level the design needs, look at zebra and curvature, explain the failing edges
