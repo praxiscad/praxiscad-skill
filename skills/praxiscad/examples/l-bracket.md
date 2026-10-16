@@ -18,8 +18,8 @@ holes on two different planes, derived parameters and a parametric edit.
 - Do the fillets before the holes, as the gotchas recommend.
 
 ## Calls
-1. `kadvia:kadvia_status`, then `kadvia:new_part {"name": "L-bracket"}` → model `m1`.
-2. `kadvia:modeling_reference {}` (once per session).
+1. `praxiscad:praxiscad_status`, then `praxiscad:new_part {"name": "L-bracket"}` → model `m1`.
+2. `praxiscad:modeling_reference {}` (once per session).
 3. Parameters:
 
 ```json
@@ -90,10 +90,10 @@ Hole-wizard alternative (same Ø5.5 result, plus a proper hole callout on drawin
 later is `update_feature {"id": "base_holes", "patch": {"size": "M6"}}` (and the same for
 `upright_holes`). See [holes-threads.md](../references/holes-threads.md).
 
-7. `kadvia:render_views {"views": ["iso", "front", "top", "left"]}`. Check that `front` shows the
+7. `praxiscad:render_views {"views": ["iso", "front", "top", "left"]}`. Check that `front` shows the
 L-profile with both radii, `top` shows 2 holes in the base leg, and `left` shows 2 holes in
 the upright.
-8. `kadvia:mass_properties {"model_id": "m1", "density_g_cm3": 2.70}` gives a volume of about
+8. `praxiscad:mass_properties {"model_id": "m1", "density_g_cm3": 2.70}` gives a volume of about
 24 059 mm³ and a mass of about **65 g**.
 
 ## Report (excerpt)
@@ -108,12 +108,12 @@ the upright.
 ```json
 {"model_id": "m1", "values": {"width": 80, "hole_d": 6.6}}
 ```
-(`kadvia:set_parameters`) Check that `changes` shows the size going from 50 × 60 × 40 to
+(`praxiscad:set_parameters`) Check that `changes` shows the size going from 50 × 60 × 40 to
 **50 × 80 × 40**. `hole_spacing` is now 50, so render `top` and confirm the holes are still 15 mm
 from the edges.
 
 ## Next steps
-- **Design check:** `kadvia:check_design {"model_id": "m1", "process": "cnc"}` before sending it
+- **Design check:** `praxiscad:check_design {"model_id": "m1", "process": "cnc"}` before sending it
   out (see [../references/design-check.md](../references/design-check.md)).
 - **Drawing:** a dimensioned A4 drawing of this bracket is worked through in
   [../references/drawings.md](../references/drawings.md#13-worked-example-drawing-of-the-l-bracket).

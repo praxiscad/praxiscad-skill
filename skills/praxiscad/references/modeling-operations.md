@@ -1,7 +1,7 @@
-# Modeling operations reference (Kadvia part model)
+# Modeling operations reference (PraxisCAD part model)
 
-Everything `kadvia:apply_operations` accepts. The same content is available live from
-`kadvia:modeling_reference`. Snippets use illustrative parameter names (`width`, `thickness`,
+Everything `praxiscad:apply_operations` accepts. The same content is available live from
+`praxiscad:modeling_reference`. Snippets use illustrative parameter names (`width`, `thickness`,
 ...); define your own with `set_parameter` first.
 
 ## Contents
@@ -19,7 +19,7 @@ Everything `kadvia:apply_operations` accepts. The same content is available live
 12. [Constrained sketches](#12-constrained-sketches)
 13. [Known limits](#13-known-limits)
 
-Related: reference images (`add_reference` …) in [image-to-cad.md](image-to-cad.md#8-reference-images-in-kadvia);
+Related: reference images (`add_reference` …) in [image-to-cad.md](image-to-cad.md#8-reference-images-in-praxiscad);
 direct edits on imported geometry (`delete_face`, `offset_face`, `move_face`, `resize_hole`,
 `import`) in [editing-step.md](editing-step.md); standard holes and the `thread` feature in
 [holes-threads.md](holes-threads.md); splines, ellipses, slots, text, `edit_sketch` and DXF
@@ -27,8 +27,8 @@ import in [sketch-tools.md](sketch-tools.md); `set_material` / `set_appearance` 
 [materials-appearance.md](materials-appearance.md).
 
 ## 1. Document model
-A part is `{schema: "kadvia.part/1", name, units: "mm", parameters: [...], features: [...]}`.
-Kadvia replays the features in order (regeneration) every time something changes.
+A part is `{schema: "praxiscad.part/1", name, units: "mm", parameters: [...], features: [...]}`.
+PraxisCAD replays the features in order (regeneration) every time something changes.
 
 - **Parameter:** `{name, value, unit?, min?, max?, description?}`.
   - `name` matches `[A-Za-z_][A-Za-z0-9_]*` and must be unique.
@@ -45,7 +45,7 @@ Kadvia replays the features in order (regeneration) every time something changes
   - `changes` compared with the previous state
 
 ## 2. Operations
-`kadvia:apply_operations {"model_id": "...", "operations": [...], "dry_run"?: bool}`
+`praxiscad:apply_operations {"model_id": "...", "operations": [...], "dry_run"?: bool}`
 
 | `op` | Fields | Notes |
 |---|---|---|
@@ -66,9 +66,9 @@ Kadvia replays the features in order (regeneration) every time something changes
 - Any invalid op or failing feature means **nothing changes**. The error names `operations[i]` and the feature id.
 - Ops run in order, so define parameters before the features that use them, and a sketch before its extrude.
 - `dry_run: true` validates and regenerates without committing.
-- Outside a batch: `kadvia:undo` / `kadvia:redo` step through the history; `kadvia:rebuild_part {"model_id": "...", "force"?: true}` regenerates the unchanged part (`force` re-runs every step and re-reads linked STEP files) without an undo step.
+- Outside a batch: `praxiscad:undo` / `praxiscad:redo` step through the history; `praxiscad:rebuild_part {"model_id": "...", "force"?: true}` regenerates the unchanged part (`force` re-runs every step and re-reads linked STEP files) without an undo step.
 - At most 200 operations per call; keep batches much smaller (one logical step).
-- `kadvia:set_parameters {"model_id": "...", "values": {"width": 120}}` is shorthand for `set_parameter` ops.
+- `praxiscad:set_parameters {"model_id": "...", "values": {"width": 120}}` is shorthand for `set_parameter` ops.
 
 ```json
 [
@@ -339,7 +339,7 @@ select a union of the listed edges. Zero matches is an error.
 - The first solid defaults to `"new"`; later ones default to `"add"`. Write `"operation": "cut"` explicitly for removals.
 - `"add"`/`"cut"`/`"intersect"` before any body exists is an error.
 - Bodies touching in a single point stay two bodies after `add`. Bodies sharing part of a curved face (the same cylinder, sphere, cone or torus) are decided by containment (see `sphere` above); the one unsupported case is a partial overlap along a shared curved face, such as two coaxial cylinders of one radius that overlap only partly: offset one of them by 0.01 mm.
-- Body ids are `b0`, `b1`, ... Read them from the result or `kadvia:get_part`. The `volume` of each body is the kernel's exact integral, identical to `kadvia:mass_properties`.
+- Body ids are `b0`, `b1`, ... Read them from the result or `praxiscad:get_part`. The `volume` of each body is the kernel's exact integral, identical to `praxiscad:mass_properties`.
 - Prefer one body. Use extra `"new"` bodies only for multi-body designs the user asked for.
 
 ## 9. Gotchas
@@ -409,12 +409,12 @@ remain the simpler path for standard shapes. Sketches also take `spline`, `ellip
 relations (`curvature`, …) and dimensions (`major_radius`, `minor_radius`, `width`), and can be
 edited with `edit_sketch`: see [sketch-tools.md](sketch-tools.md).
 - The result lists each sketch under `sketches` with `status` (`fully_constrained`, `under_constrained`, `over_constrained`, `failed`), `dof`, redundant and conflicting constraint ids.
-- `kadvia:solve_sketch {"model_id": "...", "sketch": {...}}` solves a sketch against the part's parameters **without** changing the part: use it to debug before `add_feature`.
-- Read `kadvia:modeling_reference {"topic": "constraints"}` for the exact fields before editing one.
+- `praxiscad:solve_sketch {"model_id": "...", "sketch": {...}}` solves a sketch against the part's parameters **without** changing the part: use it to debug before `add_feature`.
+- Read `praxiscad:modeling_reference {"topic": "constraints"}` for the exact fields before editing one.
 
 ## 13. Known limits
 What works with restrictions, and what is refused (say so instead of improvising). This list
-matches the app's live `kadvia:modeling_reference`; when the two disagree, the live reference wins.
+matches the app's live `praxiscad:modeling_reference`; when the two disagree, the live reference wins.
 
 | Area | Works (with restrictions) | Refused / not available |
 |---|---|---|
@@ -425,7 +425,7 @@ matches the app's live `kadvia:modeling_reference`; when the two disagree, the l
 | **Draft** | Planar faces hinged on the neutral plane; `draftAngle` on extrudes (every direction; walls shrink or grow) | Faces perpendicular to `pull`; a face or edge that would collapse ("draft too large"); `draftAngle` with `through` |
 | **Loft** | 2+ sections on any planes; holes if every section has the same number | Intersecting sections; several regions in one section; sections other than lines/arcs (closed spline sections are fine) |
 | **Sweep** | Lines and arcs with tangent junctions, line→line mitres, closed tangent loops, helices | Non-tangent arc junctions; a helix profile wider than one pitch or reaching the axis |
-| **Sheet metal** | A uniform-thickness solid checked by `kadvia:check_design` (see [design-rules.md](design-rules.md)) | Bend, flange or unfold features |
+| **Sheet metal** | A uniform-thickness solid checked by `praxiscad:check_design` (see [design-rules.md](design-rules.md)) | Bend, flange or unfold features |
 | **Threads** | Cosmetic by default; modeled 60° threads (slow) | Pipe (NPT/BSP), tapered and multi-start threads; modeled threads crossing other features may fail (see [holes-threads.md](holes-threads.md#10-limits)) |
 | **Sketch curves** | Splines, ellipses, conics and text, as fine arcs in solids and STEP | Exact free-form surfaces (see [sketch-tools.md](sketch-tools.md#12-limits)) |
 | **Imported STEP** | Exact shells become editable; shells that only display are kept as mesh-only bodies | Editing mesh-only bodies (see [editing-step.md](editing-step.md#8-honest-limits)) |

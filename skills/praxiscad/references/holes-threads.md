@@ -1,9 +1,9 @@
 # Holes and threads (hole wizard, thread feature)
 
-A `hole` with a `kind` and/or a `size` is a **wizard hole**: Kadvia takes its diameters, depths
+A `hole` with a `kind` and/or a `size` is a **wizard hole**: PraxisCAD takes its diameters, depths
 and thread from standard tables, so "M6 tapped" or "counterbore for M6" is all you need to
 write. Threads are added by tapped holes or by the `thread` feature on any cylindrical face. The
-live reference is `kadvia:modeling_reference {"topic": "holes"}`.
+live reference is `praxiscad:modeling_reference {"topic": "holes"}`.
 
 ## Contents
 1. [When to use what](#1-when-to-use-what)
@@ -101,10 +101,10 @@ Adds a thread to an existing cylindrical face: a hole wall (internal thread) or 
 - **Modeled** threads cut real geometry. They take seconds per thread (at most 400 turns): use them only for 3D printing or close-up renders.
 
 ## 6. Reading holes back, resizing, drawings
-- `kadvia:recognize_features` on a part lists wizard holes under `holeSizes` by size and kind (for example `{"M5 tapped (m5_holes)": 4}`). Each hole carries `wizard` (`feature`, `kind`, `standard`, `size`, `fit`, `role`: `drill` / `counterbore` / `counterdrill`, `callout`) and `thread` (`"M5x0.8 - 6H"`); each body lists its `threads`.
+- `praxiscad:recognize_features` on a part lists wizard holes under `holeSizes` by size and kind (for example `{"M5 tapped (m5_holes)": 4}`). Each hole carries `wizard` (`feature`, `kind`, `standard`, `size`, `fit`, `role`: `drill` / `counterbore` / `counterdrill`, `callout`) and `thread` (`"M5x0.8 - 6H"`); each body lists its `threads`.
 - **Resize** by patching the size; all diameters follow: `{"op": "update_feature", "id": "m5_holes", "patch": {"size": "M6"}}`. Don't use `resize_hole` on a wizard hole (that is for imported geometry).
 - **Drawings:** auto dimension adds one hole callout per wizard hole feature and view instead of diameter dimensions. A `hole_callout` on any circle of a wizard hole shows the standard callout with the count of equal holes, for example `4X Ø6.6 THRU` / `⌴Ø11 ↧6.5`, `Ø4.2 ↧12.5` / `M5x0.8 - 6H ↧10`, or `Ø5.5 THRU` / `⌵Ø11.2 X 90°`. Cosmetic threads are drawn as thin thread lines (hidden-dashed for internal threads, a ¾ circle in end views). See [drawings.md](drawings.md#10-notes-callouts-title-block).
-- `kadvia:check_design` lists wizard holes with their `feature` id and takes blind/through and the standard size from it, so the check, `kadvia:recognize_features` and the drawing callouts never disagree; other holes are matched against the ISO tables in context, and an ambiguous diameter is reported with `standardCandidates` (rule `hole_standard_size` fires only for sizes that match nothing). See [design-check.md](design-check.md#4-reading-the-result).
+- `praxiscad:check_design` lists wizard holes with their `feature` id and takes blind/through and the standard size from it, so the check, `praxiscad:recognize_features` and the drawing callouts never disagree; other holes are matched against the ISO tables in context, and an ambiguous diameter is reported with `standardCandidates` (rule `hole_standard_size` fires only for sizes that match nothing). See [design-check.md](design-check.md#4-reading-the-result).
 
 ## 7. Worked example: four M5 tapped holes 10 deep
 **User:** "Add four M5 tapped holes, 10 deep, 8 mm in from the corners of the top face."
@@ -129,8 +129,8 @@ The part is a 60 × 40 × 15 block centred on the origin with its base on Z = 0 
 3. Verify:
    - feature `m5_holes` is `ok`; the bbox is unchanged;
    - volume dropped by about 4 × (π × 2.1² × 12.5 + the cone) ≈ **716 mm³**;
-   - `kadvia:recognize_features` → `{"M5 tapped (m5_holes)": 4}`, `thread` `"M5x0.8 - 6H"`;
-   - `kadvia:render_views {"views": ["top", "iso"]}`: four holes, symmetric; the threaded walls show the thread texture in the user's window.
+   - `praxiscad:recognize_features` → `{"M5 tapped (m5_holes)": 4}`, `thread` `"M5x0.8 - 6H"`;
+   - `praxiscad:render_views {"views": ["top", "iso"]}`: four holes, symmetric; the threaded walls show the thread texture in the user's window.
 4. Report: "4 × M5 tapped, 10 mm full thread, Ø4.2 drill 12.5 deep. Change `thread_len` or `hole_inset`, or patch `size` to M6."
 
 ## 8. Worked example: counterbored holes for M6 socket head screws
@@ -154,7 +154,7 @@ from the edges."
 ]
 ```
 - The table gives Ø6.6 through (normal fit) with a ⌴Ø11 × 6.5 counterbore: the screw head sits 0.5 mm below the surface.
-- Verify: plate volume 84 000 mm³ minus 4 × π × (3.3² × 5.5 + 5.5² × 6.5) ≈ 3 223 mm³ → about **80 777 mm³**; `kadvia:recognize_features` lists 4 holes with `role` `drill` and `counterbore`; `kadvia:render_views {"views": ["iso"], "section": {"axis": "y", "offset": 23}}` shows the stepped section.
+- Verify: plate volume 84 000 mm³ minus 4 × π × (3.3² × 5.5 + 5.5² × 6.5) ≈ 3 223 mm³ → about **80 777 mm³**; `praxiscad:recognize_features` lists 4 holes with `role` `drill` and `counterbore`; `praxiscad:render_views {"views": ["iso"], "section": {"axis": "y", "offset": 23}}` shows the stepped section.
 - A drawing of it gets the callout `4X Ø6.6 THRU` / `⌴Ø11 ↧6.5` automatically.
 - After counterbores exist, `{"normal": "+Z"}` alone also matches the counterbore floors: keep `"plane": "max_z"` in face planes and selectors.
 

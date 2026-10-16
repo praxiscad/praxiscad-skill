@@ -1,11 +1,11 @@
-# Assemblies (`.kasm`)
+# Assemblies (`.pcasm`)
 
-An assembly places **components** (Kadvia parts, STEP files or saved assemblies used as
+An assembly places **components** (PraxisCAD parts, STEP files or saved assemblies used as
 sub-assemblies) in space and constrains them with **mates**: positioning mates (coincident,
-concentric, distance, …), limit mates, and motion mates (gear, rack and pinion, cam). Kadvia
+concentric, distance, …), limit mates, and motion mates (gear, rack and pinion, cam). PraxisCAD
 solves the mates, reports what is still free to move, lists a bill of materials (top-level,
 indented or flat) and checks for interference. The live reference is
-`kadvia:modeling_reference {"topic": "assemblies"}`.
+`praxiscad:modeling_reference {"topic": "assemblies"}`.
 
 ## Contents
 1. [Tools](#1-tools)
@@ -25,35 +25,35 @@ indented or flat) and checks for interference. The live reference is
 ## 1. Tools
 | Tool | Use it to |
 |---|---|
-| `kadvia:new_assembly` | Create an empty assembly (kind `assembly`) in the user's window |
-| `kadvia:get_assembly` | Read components, mates and the solve status (call it before editing an assembly you did not just build) |
-| `kadvia:apply_assembly_operations` | Add/update/remove components and mates as **one transaction** (one solve, one undo step); `dry_run: true` checks without committing |
-| `kadvia:mate_options` | Which mate types fit two references, best first, with each reference's world geometry (changes nothing) |
-| `kadvia:solve_assembly` | Re-solve, or drag one component as far as its mates allow, and see what moves (**nothing committed**) |
-| `kadvia:assembly_bom` | Bill of materials: components grouped by source with quantities, material and mass (from the parts' materials, or `density_g_cm3`); `structure`: `top` (default), `indented` or `flat` |
-| `kadvia:set_material` with `component_id` | Override the material of one component (for example the same part in steel and in brass); `null` removes the override |
-| `kadvia:check_interference` | Overlapping solids between components, part by part inside sub-assemblies (approximate volume and depth) |
-| `kadvia:new_drawing` with the assembly as `source` | An assembly drawing with a BOM table and balloons (see [drawings.md](drawings.md)) |
-| `kadvia:rebuild_part` | Reload component files that changed on disk and re-solve (one undo step) |
-| `kadvia:undo` / `kadvia:redo`, `kadvia:save_part` (writes `.kasm`), `kadvia:export_model`, `kadvia:mass_properties`, `kadvia:measure`, `kadvia:render_views` | Work on assemblies too |
+| `praxiscad:new_assembly` | Create an empty assembly (kind `assembly`) in the user's window |
+| `praxiscad:get_assembly` | Read components, mates and the solve status (call it before editing an assembly you did not just build) |
+| `praxiscad:apply_assembly_operations` | Add/update/remove components and mates as **one transaction** (one solve, one undo step); `dry_run: true` checks without committing |
+| `praxiscad:mate_options` | Which mate types fit two references, best first, with each reference's world geometry (changes nothing) |
+| `praxiscad:solve_assembly` | Re-solve, or drag one component as far as its mates allow, and see what moves (**nothing committed**) |
+| `praxiscad:assembly_bom` | Bill of materials: components grouped by source with quantities, material and mass (from the parts' materials, or `density_g_cm3`); `structure`: `top` (default), `indented` or `flat` |
+| `praxiscad:set_material` with `component_id` | Override the material of one component (for example the same part in steel and in brass); `null` removes the override |
+| `praxiscad:check_interference` | Overlapping solids between components, part by part inside sub-assemblies (approximate volume and depth) |
+| `praxiscad:new_drawing` with the assembly as `source` | An assembly drawing with a BOM table and balloons (see [drawings.md](drawings.md)) |
+| `praxiscad:rebuild_part` | Reload component files that changed on disk and re-solve (one undo step) |
+| `praxiscad:undo` / `praxiscad:redo`, `praxiscad:save_part` (writes `.pcasm`), `praxiscad:export_model`, `praxiscad:mass_properties`, `praxiscad:measure`, `praxiscad:render_views` | Work on assemblies too |
 
-`kadvia:open_step_file` opens a saved `.kasm` file (kind `assembly`).
+`praxiscad:open_step_file` opens a saved `.pcasm` file (kind `assembly`).
 
 ## 2. Workflow
-- [ ] Build or open the parts first (`kadvia:new_part` + `kadvia:apply_operations`, or `kadvia:open_step_file` for `.kadvia`/`.step`). Note their model ids, or save them and use file paths.
-- [ ] Read each part's geometry (`kadvia:get_part` bbox, or `kadvia:recognize_features` for hole centres): mate references use the **part's own coordinates**.
-- [ ] `kadvia:new_assembly {"name": "..."}`.
+- [ ] Build or open the parts first (`praxiscad:new_part` + `praxiscad:apply_operations`, or `praxiscad:open_step_file` for `.pcad`/`.step`). Note their model ids, or save them and use file paths.
+- [ ] Read each part's geometry (`praxiscad:get_part` bbox, or `praxiscad:recognize_features` for hole centres): mate references use the **part's own coordinates**.
+- [ ] `praxiscad:new_assembly {"name": "..."}`.
 - [ ] Batch 1: `add_component` for every part. The first one is grounded (`fixed: true`). Give the others a rough starting `transform.position` near where they go: the solver moves components as little as possible from where they start.
-- [ ] Batches 2…n: mates in small groups (one component at a time). Unsure which mate fits? `kadvia:mate_options` first. After each batch read `solve.status`, `solve.dof`, `underConstrained` and every mate's `status`.
-- [ ] Mechanisms: check the motion with a `kadvia:solve_assembly` drag (see [Checking how a mechanism moves](#checking-how-a-mechanism-moves)).
-- [ ] `kadvia:render_views` (`iso` plus a view that shows the contact faces).
-- [ ] `kadvia:check_interference`, then `kadvia:assembly_bom`.
-- [ ] Offer `kadvia:save_part` (`.kasm`; save unsaved parts first so the assembly can reference their files) and `kadvia:export_model`.
+- [ ] Batches 2…n: mates in small groups (one component at a time). Unsure which mate fits? `praxiscad:mate_options` first. After each batch read `solve.status`, `solve.dof`, `underConstrained` and every mate's `status`.
+- [ ] Mechanisms: check the motion with a `praxiscad:solve_assembly` drag (see [Checking how a mechanism moves](#checking-how-a-mechanism-moves)).
+- [ ] `praxiscad:render_views` (`iso` plus a view that shows the contact faces).
+- [ ] `praxiscad:check_interference`, then `praxiscad:assembly_bom`.
+- [ ] Offer `praxiscad:save_part` (`.pcasm`; save unsaved parts first so the assembly can reference their files) and `praxiscad:export_model`.
 
 ## 3. Components
 ```json
 [
-  {"op": "add_component", "component": {"id": "plate", "source": {"path": "/Users/ana/cad/plate.kadvia"}, "fixed": true}},
+  {"op": "add_component", "component": {"id": "plate", "source": {"path": "/Users/ana/cad/plate.pcad"}, "fixed": true}},
   {"op": "add_component", "component": {"id": "bracket", "name": "Bracket", "source": {"model": "m3"},
     "transform": {"position": [0, 0, 30], "rotation": [0, 0, 0]}}},
   {"op": "add_component", "component": {"id": "motor", "source": {"step": "/Users/ana/cad/motor.step"},
@@ -61,11 +61,11 @@ indented or flat) and checks for interference. The live reference is
 ]
 ```
 - `source` is exactly one of:
-  - `path`: a `.kadvia` file (relative paths are relative to the saved `.kasm`);
+  - `path`: a `.pcad` file (relative paths are relative to the saved `.pcasm`);
   - `model`: an open part's model id (stored as its file path if it is saved and unmodified, otherwise embedded);
   - `part`: an embedded part document;
   - `step`: a STEP file (mesh only, see [Limits](#13-limits));
-  - a saved `.kasm` as `path` (or `model` with the id of an open, saved and unmodified assembly): a rigid **sub-assembly**, see [Sub-assemblies](#11-sub-assemblies).
+  - a saved `.pcasm` as `path` (or `model` with the id of an open, saved and unmodified assembly): a rigid **sub-assembly**, see [Sub-assemblies](#11-sub-assemblies).
 - `transform`: `position` [x, y, z] mm and `rotation` [rx, ry, rz] degrees about the fixed world axes X, then Y, then Z (or `quaternion` [x, y, z, w]). World point = R·p + position. The solver rewrites the transforms of mated components.
 - Optional: `id`, `name`, `fixed`, `suppressed`, `color` (`"#rrggbb"`).
 - `update_component {id, patch}` (transform keys merge), `remove_component {id}` (removes its mates too).
@@ -105,9 +105,9 @@ Details and examples for the last six rows: [sections 8–10](#8-motion-mates-ge
 Other operations: `update_mate {id, patch}`, `remove_mate {id}`, `set_parameter` /
 `delete_parameter` (assembly parameters usable in mate values), `rename_assembly {name}`,
 `set_exploded_view {scale}`, `rebuild` (reload part files that changed on disk; the
-`kadvia:rebuild_part` tool does the same).
+`praxiscad:rebuild_part` tool does the same).
 
-**Which mate?** `kadvia:mate_options` takes two references in the same form as `add_mate` and
+**Which mate?** `praxiscad:mate_options` takes two references in the same form as `add_mate` and
 lists the mate types that fit, best first, with the world geometry each reference resolves to
 (plane, axis, point or circle with origin, direction and radius). Nothing changes. Use it when
 unsure, or to check that a selector picks the face you meant before adding the mate:
@@ -126,7 +126,7 @@ Patterns that work:
 - If a mate points the wrong way (the part lands upside down or on the far side), set `flip: true` on it with `update_mate`.
 
 Rules:
-- Selector coordinates are the **part's** coordinates. Read them from the part (bbox, hole centres from `kadvia:recognize_features`), never from world positions in the assembly.
+- Selector coordinates are the **part's** coordinates. Read them from the part (bbox, hole centres from `praxiscad:recognize_features`), never from world positions in the assembly.
 - Prefer `normal`, `plane`, `surface` + `radius` filters; use `near` with a point **on** the face (for a hole wall: centre + radius along X).
 - The batch is strict: if a component cannot load, or a mate cannot be resolved or conflicts with the others, **nothing changes**; the error names `opIndex` and the mate or component (`featureId`).
 
@@ -144,12 +144,12 @@ Rules:
 | Geometry kinds unexpected (`point` instead of `axis`) | The selector picked a different face than intended | Use a filter (`surface: "cylinder"`, `normal`) or a better `near` point |
 
 ## 6. BOM, interference, exploded view, export
-- `kadvia:assembly_bom {"model_id": "m4"}` → items with `item`, `number`, `name`, `source` (`path`, `part`, `step` or `assembly`), `quantity`, component ids, volume per unit (mm³) and mass per unit and `material` from the parts' materials (or from `density_g_cm3`, which overrides them), with `totalMass` (g) when every row has a mass. Suppressed or failed components are listed as excluded. Components with different material overrides form separate rows. Set materials on the parts (`kadvia:set_material`) so the BOM needs no density argument.
+- `praxiscad:assembly_bom {"model_id": "m4"}` → items with `item`, `number`, `name`, `source` (`path`, `part`, `step` or `assembly`), `quantity`, component ids, volume per unit (mm³) and mass per unit and `material` from the parts' materials (or from `density_g_cm3`, which overrides them), with `totalMass` (g) when every row has a mass. Suppressed or failed components are listed as excluded. Components with different material overrides form separate rows. Set materials on the parts (`praxiscad:set_material`) so the BOM needs no density argument.
 - `structure` (assemblies with sub-assemblies): `"top"` (default; a sub-assembly is one row), `"indented"` (its contents listed under its row as 3.1, 3.2, with `level`; nested quantities are per parent unit) or `"flat"` (parts only, quantities summed over every level: what to order).
-- `kadvia:check_interference {"model_id": "m4"}` (optional `components: ["bolt"]`) → `pairs` holds **clashes** only, each with approximate shared `volume` (mm³), deepest overlap `depth` (mm), a classification and the overlap box. Overlaps within the mesh tolerance (touching faces, a pin in a hole of the same diameter) are `contact` and listed separately under `contacts`. `marginal` overlaps are confirmed on the exact solids (`method` says whether that was used). Report clashes; mention contacts only if asked.
+- `praxiscad:check_interference {"model_id": "m4"}` (optional `components: ["bolt"]`) → `pairs` holds **clashes** only, each with approximate shared `volume` (mm³), deepest overlap `depth` (mm), a classification and the overlap box. Overlaps within the mesh tolerance (touching faces, a pin in a hole of the same diameter) are `contact` and listed separately under `contacts`. `marginal` overlaps are confirmed on the exact solids (`method` says whether that was used). Report clashes; mention contacts only if asked.
 - `{"op": "set_exploded_view", "scale": 1.5}` spreads the components apart in the user's view (display only: positions and mates don't change). `{"scale": 0}` or `null` turns it off.
-- `kadvia:export_model` with `.step`: one STEP file with every part solid placed, through every sub-assembly level (the nesting is flattened). STEP components are skipped with a warning. With `.stl`: every instance (including STEP components) in one mesh.
-- `kadvia:mass_properties` on the assembly combines all component bodies (world centre of mass).
+- `praxiscad:export_model` with `.step`: one STEP file with every part solid placed, through every sub-assembly level (the nesting is flattened). STEP components are skipped with a warning. With `.stl`: every instance (including STEP components) in one mesh.
+- `praxiscad:mass_properties` on the assembly combines all component bodies (world centre of mass).
 
 ## 7. Worked example: bracket bolted to a plate
 **User:** "Bolt the bracket to the plate with an M6 bolt through the first hole, and check
@@ -169,7 +169,7 @@ For example, the bolt:
 ]}
 ```
 
-1. `kadvia:new_assembly {"name": "Bracket on plate"}` → model `m4`.
+1. `praxiscad:new_assembly {"name": "Bracket on plate"}` → model `m4`.
 2. Components and mates (one batch is fine here because every reference is simple):
 
 ```json
@@ -202,14 +202,14 @@ bolt shaft; `[4, 0, 20]` on the underside of the head (an annulus between radius
 3. Check the result: the bracket is at position **[15, 10, 10]** (foot on the plate top, its
    hole over the plate hole at x = 40), the bolt at **[40, 25, −4]** (head seated on the foot
    at Z = 16). `solve.dof` = **1**: the bolt can spin, which is expected. Every mate is `ok`.
-4. `kadvia:render_views {"views": ["iso", "front"]}`: the foot sits flat on the plate, the
+4. `praxiscad:render_views {"views": ["iso", "front"]}`: the foot sits flat on the plate, the
    upright is at the plate's −X side, and the bolt head is on the foot.
-5. `kadvia:check_interference {"model_id": "m4"}` → no pairs (the Ø6 shaft sits in Ø6.6
+5. `praxiscad:check_interference {"model_id": "m4"}` → no pairs (the Ø6 shaft sits in Ø6.6
    clearance holes).
-6. `kadvia:assembly_bom {"model_id": "m4", "density_g_cm3": 7.85}` → Plate ×1, Bracket ×1,
+6. `praxiscad:assembly_bom {"model_id": "m4", "density_g_cm3": 7.85}` → Plate ×1, Bracket ×1,
    Bolt ×1 with masses.
 7. Optional: `{"op": "set_exploded_view", "scale": 1}` to show the stack-up, then
-   `kadvia:save_part {"model_id": "m4", "path": "~/cad/bracket-on-plate.kasm"}` after saving
+   `praxiscad:save_part {"model_id": "m4", "path": "~/cad/bracket-on-plate.pcasm"}` after saving
    the three parts.
 
 Report (excerpt):
@@ -228,7 +228,7 @@ How they behave:
 - They **drive each other**: when one component moves (the user drags it, an `angle` or `distance` mate's `value` changes), the other follows. That is how to pose a mechanism: add an `angle` mate on the driver and change its `value`.
 - They don't hold an axis in place. Hold each gear or pinion with other mates (a hinge: `concentric` or a point-on-axis `coincident`, plus a `coincident` face) and the rack with a slide (face contact plus a `distance` to a side plane).
 - Rotations are measured in world coordinates, so gears riding on a moving carrier (planetary sets) need the carrier held still while they turn. Change angles in steps below 180° per solve.
-- They model motion, not teeth: Kadvia has no gear-tooth feature, so a gear is typically modeled as its pitch-diameter blank. Choose the ratio from the real tooth counts.
+- They model motion, not teeth: PraxisCAD has no gear-tooth feature, so a gear is typically modeled as its pitch-diameter blank. Choose the ratio from the real tooth counts.
 - A cam follower is checked against the cam face's fine triangulation, so a curved cam is followed within that tolerance.
 
 ```json
@@ -244,7 +244,7 @@ How they behave:
 (62.832 = π × 20: a 20 mm pitch-diameter pinion.)
 
 ### Checking how a mechanism moves
-`kadvia:solve_assembly` solves the mates **without committing anything**. With a `drag` it moves
+`praxiscad:solve_assembly` solves the mates **without committing anything**. With a `drag` it moves
 one component the way the user would drag it with the mouse: `grab` is a world point on the
 component, `target` is where that point should go (both mm). The component moves as far as its
 mates allow and everything coupled to it follows (gears, racks, cams, linkages; limit mates
@@ -261,7 +261,7 @@ slider slide?", "does the crank turn the rocker?", "what else moves?". Then:
 - keep the pose: `update_component {"id": "pinion", "patch": {"transform": <returned transform>}}`
   for each moved component (or ask the user to drag it themselves);
 - set an exact position: drive a mate instead (`update_mate {"id": "turn", "patch": {"value": 30}}`)
-  and run `kadvia:check_interference` at that pose;
+  and run `praxiscad:check_interference` at that pose;
 - nothing moved: the component is grounded or fully constrained, or the target asks for a
   motion its mates don't allow (read `solve.dof` and `underConstrained`).
 
@@ -299,7 +299,7 @@ Parts (Z up), each a blank at its pitch diameter, 8 mm thick, centred on its own
 - Pinion `m2`: `{"id": "c", "type": "cylinder", "radius": 20, "height": 8}`.
 - Gear `m3`: `{"id": "c", "type": "cylinder", "radius": 40, "height": 8}`.
 
-1. `kadvia:new_assembly {"name": "Gear pair"}` → `m4`.
+1. `praxiscad:new_assembly {"name": "Gear pair"}` → `m4`.
 2. Components near their places, hinges and the gear mate:
 
 ```json
@@ -333,7 +333,7 @@ Parts (Z up), each a blank at its pitch diameter, 8 mm thick, centred on its own
    Check: the pinion turned 30° about Z, the gear **15° the other way**, `solve.dof` = **0**.
    To turn the gear from 30° to 90°, `update_mate {"id": "turn", "patch": {"value": 90}}`
    (steps below 180° per change).
-4. `kadvia:render_views {"views": ["top", "iso"]}`. `kadvia:check_interference` may report a
+4. `praxiscad:render_views {"views": ["top", "iso"]}`. `praxiscad:check_interference` may report a
    sliver where the two pitch circles touch; that is tangency on the mesh, not a real overlap.
 5. Report: ratio 0.5 (20:40), centre distance 60 mm, one DOF before posing. Remove the `turn`
    mate to leave the pair free for the user to drag.
@@ -342,23 +342,23 @@ Variants: a rack instead of the gear → `rack_pinion` with `value` = π × 40 =
 pinion turn and the rack held on a slide; an internal ring gear → `gear` with `flip: true`.
 
 ## 11. Sub-assemblies
-A saved `.kasm` used as a component is a **rigid** sub-assembly: its own mates are solved
+A saved `.pcasm` used as a component is a **rigid** sub-assembly: its own mates are solved
 inside it, and it moves in the parent as one body.
 
 ```json
 [
-  {"op": "add_component", "component": {"id": "s1", "source": {"path": "/Users/ana/cad/bracket-on-plate.kasm"},
+  {"op": "add_component", "component": {"id": "s1", "source": {"path": "/Users/ana/cad/bracket-on-plate.pcasm"},
     "transform": {"position": [10, 10, 10]}}},
   {"op": "add_mate", "mate": {"id": "seat", "type": "coincident",
     "a": {"component": "base", "face": {"plane": "max_z"}},
     "b": {"component": "s1", "face": {"normal": "-Z", "near": [[50, 25, 0]]}}}}
 ]
 ```
-- Source: `{"path": "<.kasm>"}`, or `{"model": "<open assembly id>"}` once that assembly is saved and has no unsaved changes.
+- Source: `{"path": "<.pcasm>"}`, or `{"model": "<open assembly id>"}` once that assembly is saved and has no unsaved changes.
 - Mate references into a sub-assembly use **the sub-assembly's own coordinates**. Its bodies are named `<child>.<body>` (`plate.b0`; nested: `<child>.<grandchild>.<body>`). Without `body`, a `near` or `vertex` pick chooses the nearest body; `"body": "plate.b0"` names one explicitly.
-- To change a sub-assembly, open its `.kasm`, edit, save; the parent reloads it (`{"op": "rebuild"}` or `kadvia:rebuild_part` forces a reload).
-- `kadvia:assembly_bom` with `structure: "indented"` lists its contents under its row (2.1, 2.2, …); `"flat"` adds its parts to the totals.
-- `kadvia:check_interference` checks its parts one by one (pairs named like `"s1/bolt"`); `components: ["s1"]` checks everything inside `s1`.
+- To change a sub-assembly, open its `.pcasm`, edit, save; the parent reloads it (`{"op": "rebuild"}` or `praxiscad:rebuild_part` forces a reload).
+- `praxiscad:assembly_bom` with `structure: "indented"` lists its contents under its row (2.1, 2.2, …); `"flat"` adds its parts to the totals.
+- `praxiscad:check_interference` checks its parts one by one (pairs named like `"s1/bolt"`); `components: ["s1"]` checks everything inside `s1`.
 - STEP export places every part through all levels.
 - An assembly cannot contain itself (directly or through its sub-assemblies); at most 8 nesting levels. Component errors inside a sub-assembly show in that component's `message`.
 
@@ -367,7 +367,7 @@ Example: two bracket-on-plate sub-assemblies on a base. `structure: "top"` → 1
 sub-assembly). `"flat"` → Base ×1, Plate ×2, Bracket ×2, Bolt ×2.
 
 ## 12. Drawings of assemblies
-`kadvia:new_drawing {"source": "<assembly id>"}` makes an assembly drawing: hidden lines
+`praxiscad:new_drawing {"source": "<assembly id>"}` makes an assembly drawing: hidden lines
 across components, overall dimensions, a BOM table and balloons (item numbers from the BOM),
 optional exploded views and extra sheets. Save the assembly (and its parts) before saving the
 drawing. See [drawings.md](drawings.md#15-worked-example-assembly-drawing-with-bom-and-balloons).
@@ -377,8 +377,8 @@ drawing. See [drawings.md](drawings.md#15-worked-example-assembly-drawing-with-b
 - STEP components are mesh only: mate references on them support only `near` and `ids`, and STEP export skips them (STL export includes them).
 - Gear and rack-and-pinion mates relate motion, not tooth geometry; their axes must be held by other mates; planetary sets need the carrier held while the gears turn; change angles in steps below 180°.
 - Cam followers follow the cam face's triangulation, within its tolerance.
-- `kadvia:check_design` does not run on assemblies: check the component parts, and use `kadvia:check_interference` for the assembly.
+- `praxiscad:check_design` does not run on assemblies: check the component parts, and use `praxiscad:check_interference` for the assembly.
 - Interference is first computed on the display meshes, so volumes and depths are approximate (marginal cases are confirmed on exact solids).
-- A batch of many `add_component` ops is one transaction and can take a while: pass `request_id`, and on `still_running` wait with `kadvia:operation_status` instead of resending. `rebuild` reloads only component files whose content changed.
-- `kadvia:solve_assembly` drags are previews: nothing is saved in the assembly until you write the transforms (`update_component`) or drive a mate.
+- A batch of many `add_component` ops is one transaction and can take a while: pass `request_id`, and on `still_running` wait with `praxiscad:operation_status` instead of resending. `rebuild` reloads only component files whose content changed.
+- `praxiscad:solve_assembly` drags are previews: nothing is saved in the assembly until you write the transforms (`update_component`) or drive a mate.
 - Material overrides apply to a whole component; overrides on components inside a rigid sub-assembly are not applied when it is placed. STEP components have no material (no mass in the BOM unless `density_g_cm3` is given).

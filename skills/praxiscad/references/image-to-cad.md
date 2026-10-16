@@ -3,9 +3,9 @@
 Rebuilding a part from a photo, sketch, screenshot or drawing. There are two ways to use the
 image, and they combine well:
 - **Read it:** an AI model that accepts images looks at the picture and estimates dimensions.
-- **Trace over it in Kadvia:** place the image file in the part as a **reference image** (a
+- **Trace over it in PraxisCAD:** place the image file in the part as a **reference image** (a
   tracing underlay on a sketch plane), calibrate its scale from one known dimension, then
-  sketch over it and compare the model with the picture in `kadvia:render_views`. This works
+  sketch over it and compare the model with the picture in `praxiscad:render_views`. This works
   even for text-only models, because positions come from the calibrated image coordinates.
 
 The skill is in **extracting dimensions honestly** and making every guess easy to correct.
@@ -18,14 +18,14 @@ The skill is in **extracting dimensions honestly** and making every guess easy t
 5. [Confirming with the user](#5-confirming-with-the-user)
 6. [Modeling and verifying](#6-modeling-and-verifying)
 7. [Common traps](#7-common-traps)
-8. [Reference images in Kadvia](#8-reference-images-in-kadvia)
+8. [Reference images in PraxisCAD](#8-reference-images-in-praxiscad)
 9. [Worked example: tracing a calibrated photo](#9-worked-example-tracing-a-calibrated-photo)
 
 ## 1. Workflow
 - [ ] Classify the image: an orthographic drawing (with or without dimensions), a hand sketch, a photo (straight-on or perspective), or a render or screenshot of another CAD model.
 - [ ] List the features (base shape, holes, slots, bosses, ribs, pockets, fillets, chamfers), the symmetry and the counts.
-- [ ] Choose the construction (sketch → extrude, revolve, primitives) and the orientation in Kadvia.
-- [ ] If the user has the image as a file: place it as a reference image on the matching plane (front view → `XZ`, top view → `XY`, side view → `YZ`) and **calibrate** it with one known dimension ([section 8](#8-reference-images-in-kadvia)).
+- [ ] Choose the construction (sketch → extrude, revolve, primitives) and the orientation in PraxisCAD.
+- [ ] If the user has the image as a file: place it as a reference image on the matching plane (front view → `XZ`, top view → `XY`, side view → `YZ`) and **calibrate** it with one known dimension ([section 8](#8-reference-images-in-praxiscad)).
 - [ ] Find the scale; estimate every key dimension with its basis (from the calibrated image coordinates when you traced it).
 - [ ] **Ask the user to confirm** the key dimensions (table below). Don't model guesses silently.
 - [ ] Model with every dimension as a parameter, in small batches, sketching on the reference image's plane.
@@ -91,13 +91,13 @@ Before the first modeling batch, show a compact table and ask one question:
 ## 6. Modeling and verifying
 - **Orientation:**
   - Put the part's largest flat face or natural base on XY at Z = 0.
-  - What the photo shows "from the front" should face −Y, so it matches Kadvia's `front` view.
-  - A drawing's front view maps to Kadvia `front`, its top view to `top`, and its right-side view to `right`.
-- Parameterise everything you estimated. Then a correction is a single `kadvia:set_parameters` call.
+  - What the photo shows "from the front" should face −Y, so it matches PraxisCAD's `front` view.
+  - A drawing's front view maps to PraxisCAD `front`, its top view to `top`, and its right-side view to `right`.
+- Parameterise everything you estimated. Then a correction is a single `praxiscad:set_parameters` call.
 - **Verify:**
-  - `kadvia:render_views` with the view that matches the image (`front` for a straight-on photo or drawing view, `iso` for a three-quarter photo). Compare the silhouette, feature positions and counts.
+  - `praxiscad:render_views` with the view that matches the image (`front` for a straight-on photo or drawing view, `iso` for a three-quarter photo). Compare the silhouette, feature positions and counts.
   - Check that ratios match: if the hole looks like ¼ of the width in the image, check `hole_d / width` in the model.
-  - `kadvia:mass_properties` if the user knows the real weight. Matching mass is a strong check on thickness.
+  - `praxiscad:mass_properties` if the user knows the real weight. Matching mass is a strong check on thickness.
 - In the report, list assumptions, unverified items and the parameters to adjust.
 
 ## 7. Common traps
@@ -108,13 +108,13 @@ Before the first modeling batch, show a compact table and ask one question:
 - Assuming a hole goes through when its far side is hidden.
 - Using an object as the scale when it is closer to the camera than the part, which makes the part look smaller.
 
-## 8. Reference images in Kadvia
+## 8. Reference images in PraxisCAD
 A reference image is a picture placed on a plane of the part. It is stored in the part but
 **never affects geometry** (or mass properties). The user sees it behind the model; you see it
-only in `kadvia:render_views` with `"include_references": true`. Live reference:
-`kadvia:modeling_reference {"topic": "references"}`.
+only in `praxiscad:render_views` with `"include_references": true`. Live reference:
+`praxiscad:modeling_reference {"topic": "references"}`.
 
-Operations (in `kadvia:apply_operations`):
+Operations (in `praxiscad:apply_operations`):
 
 | `op` | Fields |
 |---|---|
@@ -142,9 +142,9 @@ W × H image):
 - `v = origin[1] + (0.5 − py / H) × width × H / W`
 
 **Two-point calibration:** `p1` and `p2` are the plane coordinates of the two ends of a known
-dimension *as the image is currently placed*, and `distance` is its real length. Kadvia scales
+dimension *as the image is currently placed*, and `distance` is its real length. PraxisCAD scales
 the image about `p1` so that |p2 − p1| = distance (and stores the scaled `p2`). The user can do
-the same with the two-point tool in the app; if they did, read the result with `kadvia:get_part`
+the same with the two-point tool in the app; if they did, read the result with `praxiscad:get_part`
 (`document.references`).
 
 Tips:
@@ -159,7 +159,7 @@ Tips:
 The photo is 1600 × 1200 px, taken straight from the front. In the image, the base's bottom
 edge runs from pixel (320, 980) to pixel (1320, 980).
 
-1. `kadvia:new_part {"name": "Bracket from photo"}` → `m1`.
+1. `praxiscad:new_part {"name": "Bracket from photo"}` → `m1`.
 2. Place the photo on `XZ` with a guessed width of 200 mm (so the image height is 150 mm),
    centred at [0, 40]:
 
@@ -182,7 +182,7 @@ edge runs from pixel (320, 980) to pixel (1320, 980).
     "patch": {"calibration": {"p1": [-60, -7.5], "p2": [65, -7.5], "distance": 100}}}
 ]}
 ```
-   Kadvia scales the image by 100/125 = 0.8 about p1: the width becomes 160 mm and the
+   PraxisCAD scales the image by 100/125 = 0.8 about p1: the width becomes 160 mm and the
    origin [−12, 30.5].
 4. Optional: move the image so the base's left end sits on the world origin (shift by
    +60, +7.5), and restate the calibration at the new position so it stays consistent:
@@ -194,7 +194,7 @@ edge runs from pixel (320, 980) to pixel (1320, 980).
               "calibration": {"p1": [0, 0], "p2": [100, 0], "distance": 100}}}
 ]}
 ```
-5. `kadvia:render_views {"views": ["front"], "include_references": true}`: check that the
+5. `praxiscad:render_views {"views": ["front"], "include_references": true}`: check that the
    base's left end is at the origin and its right end at X = 100.
 6. Read the other key points the same way (now 1 image px = 160/1600 = 0.1 mm), show the
    user the dimension table ([section 5](#5-confirming-with-the-user)), and after

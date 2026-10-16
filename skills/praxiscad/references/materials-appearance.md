@@ -3,8 +3,8 @@
 A **material** is engineering data: density (for mass), Young's modulus, Poisson's ratio, yield
 and tensile strength, plus a default look. An **appearance** is display only: colour and finish
 never change geometry, volume or mass. Both are stored in the part (and in the components of an
-assembly), go through undo/redo and are saved with `.kadvia` / `.kasm` files. The live reference
-is `kadvia:modeling_reference {"topic": "materials"}`.
+assembly), go through undo/redo and are saved with `.pcad` / `.pcasm` files. The live reference
+is `praxiscad:modeling_reference {"topic": "materials"}`.
 
 ## Contents
 1. [Tools](#1-tools)
@@ -21,11 +21,11 @@ is `kadvia:modeling_reference {"topic": "materials"}`.
 ## 1. Tools
 | Tool | Use it to |
 |---|---|
-| `kadvia:list_materials {query?, category?}` | List the library (id, name, category, density g/cm³, modulus GPa, yield/tensile MPa, default look). `category`: `metal`, `plastic`, `other`. Changes nothing |
-| `kadvia:set_material {model_id, material, body_id?, component_id?}` | Assign a material to the whole part (default of every body), one body, or override it for one assembly component; `material: null` removes it |
-| `kadvia:set_appearance {model_id, body_id?, faces?, color?, finish?, metalness?, roughness?, clearcoat?, opacity?, name?, reset?, replace?}` | Change the look of the part, one body, or some faces of a body |
-| `kadvia:mass_properties {model_id, body_id?, density_g_cm3?}` | Volume, area, centre of mass and **mass from the assigned materials** |
-| `kadvia:render_views {views, quality: "render", environment?, background?}` | Beauty render (product shot) with materials and appearances |
+| `praxiscad:list_materials {query?, category?}` | List the library (id, name, category, density g/cm³, modulus GPa, yield/tensile MPa, default look). `category`: `metal`, `plastic`, `other`. Changes nothing |
+| `praxiscad:set_material {model_id, material, body_id?, component_id?}` | Assign a material to the whole part (default of every body), one body, or override it for one assembly component; `material: null` removes it |
+| `praxiscad:set_appearance {model_id, body_id?, faces?, color?, finish?, metalness?, roughness?, clearcoat?, opacity?, name?, reset?, replace?}` | Change the look of the part, one body, or some faces of a body |
+| `praxiscad:mass_properties {model_id, body_id?, density_g_cm3?}` | Volume, area, centre of mass and **mass from the assigned materials** |
+| `praxiscad:render_views {views, quality: "render", environment?, background?}` | Beauty render (product shot) with materials and appearances |
 
 Each `set_material` / `set_appearance` call is one undo step and returns the bodies with their
 material and mass.
@@ -47,10 +47,10 @@ that isn't in the library, use a **custom material**: `{"name": "PU foam", "dens
 
 ## 3. set_material
 ```
-kadvia:set_material {"model_id": "m1", "material": "aluminium_6061"}
-kadvia:set_material {"model_id": "m1", "body_id": "b1", "material": "rubber"}
-kadvia:set_material {"model_id": "a1", "component_id": "lid", "material": "polycarbonate"}
-kadvia:set_material {"model_id": "m1", "material": null}
+praxiscad:set_material {"model_id": "m1", "material": "aluminium_6061"}
+praxiscad:set_material {"model_id": "m1", "body_id": "b1", "material": "rubber"}
+praxiscad:set_material {"model_id": "a1", "component_id": "lid", "material": "polycarbonate"}
+praxiscad:set_material {"model_id": "m1", "material": null}
 ```
 - The material of a body is the body override, else the part material.
 - An assembly component uses its part's materials unless the component has its own override; components with different overrides become separate BOM rows. Overrides on components inside a rigid sub-assembly are not applied when it is placed.
@@ -59,9 +59,9 @@ kadvia:set_material {"model_id": "m1", "material": null}
 
 ## 4. set_appearance
 ```
-kadvia:set_appearance {"model_id": "m1", "color": "#2a5db0", "finish": "satin", "name": "Anodised blue"}
-kadvia:set_appearance {"model_id": "m1", "body_id": "b0", "faces": {"normal": "+Z", "plane": "max_z"}, "finish": "polished"}
-kadvia:set_appearance {"model_id": "m1", "reset": true}
+praxiscad:set_appearance {"model_id": "m1", "color": "#2a5db0", "finish": "satin", "name": "Anodised blue"}
+praxiscad:set_appearance {"model_id": "m1", "body_id": "b0", "faces": {"normal": "+Z", "plane": "max_z"}, "finish": "polished"}
+praxiscad:set_appearance {"model_id": "m1", "reset": true}
 ```
 | Field | Meaning |
 |---|---|
@@ -73,7 +73,7 @@ kadvia:set_appearance {"model_id": "m1", "reset": true}
 | `opacity` | 1 = opaque (default); 0.05–0.9 = see-through. 0 is refused |
 | `name` | Display name of the look |
 | `body_id` | Style one body (default: the whole part) |
-| `faces` | Face selector for some faces of `body_id` (required with `faces`): `{"normal": "+Z"}`, `{"plane": "max_x"}`, `{"surface": "cylinder", "concave": true}` (hole walls), `{"ids": [3, 7]}` (from `kadvia:get_selection`) |
+| `faces` | Face selector for some faces of `body_id` (required with `faces`): `{"normal": "+Z"}`, `{"plane": "max_x"}`, `{"surface": "cylinder", "concave": true}` (hole walls), `{"ids": [3, 7]}` (from `praxiscad:get_selection`) |
 | `reset` | `true` removes the appearance at this level (the material's or part's look shows again) |
 | `replace` | `true` starts from scratch instead of merging into the existing look |
 
@@ -104,14 +104,14 @@ Keep the real material for coated or anodised metal (mass stays right) and chang
 appearance.
 
 ## 6. Mass, BOM and drawings
-- `kadvia:mass_properties` returns `mass_g` / `mass_kg` with `massSource: "assigned material(s)"` when every body has a material; several bodies give per-body rows and a mass-weighted centre of mass (`material: "mixed"` when they differ). Bodies without one are listed in `unassigned` (the centre of mass is then volume-weighted).
+- `praxiscad:mass_properties` returns `mass_g` / `mass_kg` with `massSource: "assigned material(s)"` when every body has a material; several bodies give per-body rows and a mass-weighted centre of mass (`material: "mixed"` when they differ). Bodies without one are listed in `unassigned` (the centre of mass is then volume-weighted).
 - `density_g_cm3` still overrides everything (`massSource: "density_g_cm3 argument"`); use it for "what would it weigh in brass?" without changing the part.
-- `kadvia:assembly_bom` rows get `mass` per unit and `material` from the materials (a `density_g_cm3` argument overrides them); `totalMass` appears when every row has a mass.
+- `praxiscad:assembly_bom` rows get `mass` per unit and `material` from the materials (a `density_g_cm3` argument overrides them); `totalMass` appears when every row has a mass.
 - Drawing BOM tables: the `mass` column uses the materials unless `density` is set; a `material` column shows material names. The title block `material` field is plain text: fill it in (for example `"AL 6061-T6"`).
 - FDM prints are not solid: say that the real mass is roughly 50–80 % of the solid value, depending on infill.
 
 ## 7. Product renders
-`kadvia:render_views` with `quality: "render"` makes a beauty render: physically based
+`praxiscad:render_views` with `quality: "render"` makes a beauty render: physically based
 materials and appearances, environment lighting, tone mapping, a soft ground shadow, no edges,
 supersampled.
 
@@ -151,12 +151,12 @@ step for everything):
 **User:** "Make the bracket anodised blue aluminium and give me a nice product shot on a
 transparent background. How much does it weigh?"
 
-1. `kadvia:kadvia_status` → the part `m1` is open (other open models don't matter: the render shows `m1` only).
-2. `kadvia:set_material {"model_id": "m1", "material": "aluminium_6061"}` → bodies report the material and mass, for example `mass_g: 66.9`.
-3. `kadvia:set_appearance {"model_id": "m1", "color": "#2a5db0", "finish": "satin", "metalness": 0.8, "name": "Anodised blue"}` (geometry and mass unchanged).
-4. `kadvia:render_views {"model_id": "m1", "views": ["iso"], "quality": "render", "environment": "studio", "background": "transparent", "width": 1600, "height": 1200}`. Look at the image: is the colour right, are the faces lit, is anything clipped?
+1. `praxiscad:praxiscad_status` → the part `m1` is open (other open models don't matter: the render shows `m1` only).
+2. `praxiscad:set_material {"model_id": "m1", "material": "aluminium_6061"}` → bodies report the material and mass, for example `mass_g: 66.9`.
+3. `praxiscad:set_appearance {"model_id": "m1", "color": "#2a5db0", "finish": "satin", "metalness": 0.8, "name": "Anodised blue"}` (geometry and mass unchanged).
+4. `praxiscad:render_views {"model_id": "m1", "views": ["iso"], "quality": "render", "environment": "studio", "background": "transparent", "width": 1600, "height": 1200}`. Look at the image: is the colour right, are the faces lit, is anything clipped?
 5. Optional second angle: `"views": ["front"]` or `"environment": "outdoor"`.
-6. Report: material Aluminium 6061-T6, mass from step 2 (or `kadvia:mass_properties`), the look you set (colour, finish), and that the PNG has a transparent background. Offer `kadvia:save_part` so the material and look are kept.
+6. Report: material Aluminium 6061-T6, mass from step 2 (or `praxiscad:mass_properties`), the look you set (colour, finish), and that the PNG has a transparent background. Offer `praxiscad:save_part` so the material and look are kept.
 
 Two-tone variant: black anodised top face only.
 ```json
@@ -171,4 +171,4 @@ Two-tone variant: black anodised top face only.
 - Materials are isotropic engineering placeholders: no temperature dependence and no stress analysis (FEA) yet.
 - Assembly component overrides apply to the whole component; overrides inside rigid sub-assemblies are not applied when placed.
 - The render's ground shadow is a shadow map (not ray traced), and the ground shows no reflections.
-- Imported STEP geometry comes without a material: set one after `kadvia:convert_to_part` (STEP components of an assembly have none).
+- Imported STEP geometry comes without a material: set one after `praxiscad:convert_to_part` (STEP components of an assembly have none).

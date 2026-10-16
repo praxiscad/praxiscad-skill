@@ -1,9 +1,9 @@
 # Design check (manufacturability)
 
-`kadvia:check_design` analyses whether a part (or an imported STEP model) can be made with a
+`praxiscad:check_design` analyses whether a part (or an imported STEP model) can be made with a
 given process and lists every problem with its exact location. The user can see the same check
-with a heat map in Kadvia (**Inspect → Design check**). The live reference is
-`kadvia:modeling_reference {"topic": "design_check"}`.
+with a heat map in PraxisCAD (**Inspect → Design check**). The live reference is
+`praxiscad:modeling_reference {"topic": "design_check"}`.
 
 ## Contents
 1. [When to run it](#1-when-to-run-it)
@@ -69,7 +69,7 @@ background). The supplier's own limits always win.
   - `value` vs `limit` is the measured number against the rule (mm, degrees or a ratio of the hole diameter / pocket width).
   - `location.point` is a 3D point on the problem; it works directly in `near` selectors.
 - `holes[]`: every detected hole `{bodyId, faceIds, diameter, depth, through, axis, center, feature?, standard?, identity?, standardCandidates?}`.
-  - A hole cut by a hole-wizard feature carries that feature's id in `feature` and takes `through` and `standard` from it (`"M4 tap drill"`, `"M5 clearance (medium)"`, `"M6 counterbore"`), so the check agrees with `kadvia:recognize_features` and the drawing callouts.
+  - A hole cut by a hole-wizard feature carries that feature's id in `feature` and takes `through` and `standard` from it (`"M4 tap drill"`, `"M5 clearance (medium)"`, `"M6 counterbore"`), so the check agrees with `praxiscad:recognize_features` and the drawing callouts.
   - Otherwise `through` is geometric (a floor face or drill-point cone inside the cylinder closes it) and `standard` stays empty: the hole has `identity: "diameter"` and `standardCandidates` lists the ISO sizes the diameter matches (a counterbore reading needs a smaller coaxial hole below it).
   - A coincident diameter is not design intent: a Ø8.6 opening is not "an M10 tap drill". Never present a candidate as the hole's identity or a drawing callout; tell the user the options instead of picking one. The `hole_standard_size` info is raised only for diameters that match nothing.
 - `groups[]`: the same issues grouped per rule with `count`, value range and the features involved. Report the groups instead of repeating each occurrence.
@@ -83,7 +83,7 @@ How to report it to the user:
    right side is 0.6 mm; CNC needs at least 0.8 mm".
 2. Infos are advice, not defects (for example a non-standard hole size). Mention them briefly.
 3. Propose concrete fixes (next section) and **ask before changing the design**.
-4. After the fix, run `kadvia:check_design` again and say what changed.
+4. After the fix, run `praxiscad:check_design` again and say what changed.
 
 ## 5. Fixing issues
 Change the **parameter or feature that made the face**, not the symptom.
@@ -110,7 +110,7 @@ Change the **parameter or feature that made the face**, not the symptom.
 `depth`, `thickness`) with a 40 × 20 × 5 pocket cut from the top by sketch `pocket_sk`
 (a `rect` without corner radius) and extrude `pocket`.
 
-1. `kadvia:check_design {"model_id": "m1", "process": "cnc"}`. Example result (abridged; the exact wording varies):
+1. `praxiscad:check_design {"model_id": "m1", "process": "cnc"}`. Example result (abridged; the exact wording varies):
 
 ```json
 {"summary": {"errors": 4, "warnings": 0, "infos": 0},
@@ -136,7 +136,7 @@ Change the **parameter or feature that made the face**, not the symptom.
 ]}
 ```
    (`update_feature` is a shallow merge, so the whole `profiles` list is sent.)
-4. `kadvia:check_design {"model_id": "m1", "process": "cnc"}` again → `summary.errors` = 0.
+4. `praxiscad:check_design {"model_id": "m1", "process": "cnc"}` again → `summary.errors` = 0.
    Report: "Fixed: the pocket corners now have R3 (parameter `pocket_r`). The check passes
    for CNC with a Ø6 cutter."
 
@@ -144,8 +144,8 @@ The same loop works for printing: `{"process": "print_fdm"}`, then fix overhangs
 chamfers or try `"build_direction": "-Z"` (upside down) and compare the overhang area in `stats`.
 
 ## 7. Limits
-- Assemblies are not checked; check each part, and use `kadvia:check_interference` for the assembly.
-- Imported models are checked on their mesh (`exact: false`): values are approximate. Convert them with `kadvia:convert_to_part` for exact results (mesh-only bodies of a converted part stay approximate).
+- Assemblies are not checked; check each part, and use `praxiscad:check_interference` for the assembly.
+- Imported models are checked on their mesh (`exact: false`): values are approximate. Convert them with `praxiscad:convert_to_part` for exact results (mesh-only bodies of a converted part stay approximate).
 - A face boundary that crosses itself (the exported STEP may be rejected by other CAD tools) is reported as a warning: fix the feature that made it.
-- Wall thickness is sampled over the surface: confirm critical walls with `kadvia:measure` (two faces give their exact distance).
+- Wall thickness is sampled over the surface: confirm critical walls with `praxiscad:measure` (two faces give their exact distance).
 - The check knows geometry, not material or tolerances: say what you assumed (cutter size, nozzle, machine).

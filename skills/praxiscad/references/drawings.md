@@ -1,4 +1,4 @@
-# 2D drawings (`.kdraw`)
+# 2D drawings (`.pcdrw`)
 
 A drawing is a 2D engineering drawing of a **part** (kind `part`), an **assembly** (kind
 `assembly`) or an **imported STEP model** (kind `imported`), opened as its own model of kind
@@ -7,7 +7,7 @@ component of an assembly), silhouettes and hole centrelines. A drawing can have 
 sheets, toleranced dimensions, GD&T symbols, surface finish symbols and, for assemblies, a
 BOM table, item balloons and exploded views. The drawing **follows its source**: change the
 part or assembly and the views, dimension values and BOM update. The live reference is
-`kadvia:modeling_reference {"topic": "drawings"}`.
+`praxiscad:modeling_reference {"topic": "drawings"}`.
 
 ## Contents
 1. [Tools](#1-tools)
@@ -30,22 +30,22 @@ part or assembly and the views, dimension values and BOM update. The live refere
 ## 1. Tools
 | Tool | Use it to |
 |---|---|
-| `kadvia:new_drawing` | Create a drawing (`source`: the model id of an open part, assembly or imported STEP model, or an absolute `.kadvia`, `.kasm`, `.step`/`.stp` path); views, sheet and scale are laid out automatically; `auto_dimension` defaults to true; assemblies also get `bom_table` and `balloons` (both default true) |
-| `kadvia:get_drawing` | Read the sheet(s), views (id, sheet, orientation, scale, position), every view's **edge ids**, holes, dimension values and tolerances, annotations, the BOM (assemblies) and warnings |
-| `kadvia:apply_drawing_operations` | Edit sheets, views, dimensions, annotations and the title block as one transaction (one undo step); `dry_run: true` checks without committing |
-| `kadvia:export_drawing` | Write PDF (vector, one page per sheet), DXF R12 (for CAD/CAM, laser cutting) or SVG; DXF/SVG of a multi-sheet drawing write one file per sheet unless `sheet` picks one |
-| `kadvia:save_part` with a `.kdraw` path | Save the drawing itself (save the source first: the drawing references its file) |
-| `kadvia:undo` / `kadvia:redo` | Work on drawings too |
+| `praxiscad:new_drawing` | Create a drawing (`source`: the model id of an open part, assembly or imported STEP model, or an absolute `.pcad`, `.pcasm`, `.step`/`.stp` path); views, sheet and scale are laid out automatically; `auto_dimension` defaults to true; assemblies also get `bom_table` and `balloons` (both default true) |
+| `praxiscad:get_drawing` | Read the sheet(s), views (id, sheet, orientation, scale, position), every view's **edge ids**, holes, dimension values and tolerances, annotations, the BOM (assemblies) and warnings |
+| `praxiscad:apply_drawing_operations` | Edit sheets, views, dimensions, annotations and the title block as one transaction (one undo step); `dry_run: true` checks without committing |
+| `praxiscad:export_drawing` | Write PDF (vector, one page per sheet), DXF R12 (for CAD/CAM, laser cutting) or SVG; DXF/SVG of a multi-sheet drawing write one file per sheet unless `sheet` picks one |
+| `praxiscad:save_part` with a `.pcdrw` path | Save the drawing itself (save the source first: the drawing references its file) |
+| `praxiscad:undo` / `praxiscad:redo` | Work on drawings too |
 
-`kadvia:open_step_file` opens a saved `.kdraw` (and its source).
+`praxiscad:open_step_file` opens a saved `.pcdrw` (and its source).
 
 ## 2. Workflow
-- [ ] Finish and check the source first (part: feature status, `kadvia:check_design` if relevant; assembly: solve status, `kadvia:check_interference`).
-- [ ] `kadvia:new_drawing` with `source`, the views you need (default `["front", "top", "right", "iso"]`), `title_block` fields and, if the user has a standard, `projection` and `sheet_size`.
-- [ ] `kadvia:get_drawing`: compare the auto dimensions' values with the design intent; read `warnings` (and `bom` for an assembly).
-- [ ] `kadvia:apply_drawing_operations`: add what the auto dimensions missed (thicknesses, key functional distances), tolerances on the functional sizes, datums and feature control frames if the user works with GD&T, detail/section views for small or hidden features, notes, title block fields, extra sheets.
-- [ ] Look at it: the user sees the sheet in Kadvia. Describe what is on it; read values from `kadvia:get_drawing` (dimensions are measured, never typed).
-- [ ] Offer `kadvia:export_drawing` (PDF for people, DXF for CAM) and `kadvia:save_part` (`.kdraw`).
+- [ ] Finish and check the source first (part: feature status, `praxiscad:check_design` if relevant; assembly: solve status, `praxiscad:check_interference`).
+- [ ] `praxiscad:new_drawing` with `source`, the views you need (default `["front", "top", "right", "iso"]`), `title_block` fields and, if the user has a standard, `projection` and `sheet_size`.
+- [ ] `praxiscad:get_drawing`: compare the auto dimensions' values with the design intent; read `warnings` (and `bom` for an assembly).
+- [ ] `praxiscad:apply_drawing_operations`: add what the auto dimensions missed (thicknesses, key functional distances), tolerances on the functional sizes, datums and feature control frames if the user works with GD&T, detail/section views for small or hidden features, notes, title block fields, extra sheets.
+- [ ] Look at it: the user sees the sheet in PraxisCAD. Describe what is on it; read values from `praxiscad:get_drawing` (dimensions are measured, never typed).
+- [ ] Offer `praxiscad:export_drawing` (PDF for people, DXF for CAM) and `praxiscad:save_part` (`.pcdrw`).
 
 ## 3. Sources: parts, assemblies, STEP models
 | Source | Body ids in edge ids | Auto dimension | Extras |
@@ -55,7 +55,7 @@ part or assembly and the views, dimension values and BOM update. The live refere
 | Imported STEP | `b0`, `b1`, … in file order | as for a part | dimensions measure the exact solids like a part's |
 
 - Assembly drawings remove hidden lines across components (a pin inside a hole is hidden behind the plate). STEP components of an assembly, and STEP files the app cannot read as exact solids, are drawn from their display meshes (polyline edges, with a warning).
-- To save the drawing, the source needs a file: a saved `.kadvia`, a saved `.kasm` (save its parts first) or the STEP file itself.
+- To save the drawing, the source needs a file: a saved `.pcad`, a saved `.pcasm` (save its parts first) or the STEP file itself.
 
 ## 4. Sheets and projection
 - `sheet_size`: `A4`, `A3`, `A2`, `A1`, `A0`, `Letter`, `Tabloid`; `orientation`: `landscape` (default) or `portrait`. Default: A4 if the views fit at 1:1, otherwise A3 (assemblies: A3).
@@ -69,7 +69,7 @@ part or assembly and the views, dimension values and BOM update. The live refere
 - A view goes on a sheet with `view.sheet` (or later `move_view {id, sheet}`); notes and BOM tables with `annotation.sheet`. Dimensions and view annotations follow their view. Everything defaults to the first sheet.
 - `update_sheet {patch, sheet?}`: without `sheet` it changes the drawing defaults (`size`, `orientation`, `scale`, `projection`); with `sheet` that sheet's `name`, `size`, `orientation`, `scale`.
 - A detail or section view may sit on another sheet than its parent; the detail circle or cutting line is drawn on the parent's sheet.
-- The title block shows "SHEET n / N". `kadvia:get_drawing` lists `sheets` (id, index, name, size in mm) when there is more than one, and every view says which `sheet` it is on.
+- The title block shows "SHEET n / N". `praxiscad:get_drawing` lists `sheets` (id, index, name, size in mm) when there is more than one, and every view says which `sheet` it is on.
 
 ## 5. Views
 | Type | Fields |
@@ -83,13 +83,13 @@ down −Z (x = X, y = Y), `right` looks along −X (x = Y, y = Z).
 
 ## 6. Edge ids and view coordinates
 Each view has 2D coordinates in **model mm** (the projection of the source; front view: x = X,
-y = Z). `kadvia:get_drawing` lists the drawn edges of each view as
+y = Z). `praxiscad:get_drawing` lists the drawn edges of each view as
 `{id, shape: "line" | "circle" | "arc" | "curve" | "point", a, b, center?, radius?, visible}`
 and its holes as `{center, diameter, thru, depth, edge}`.
 - `"b0:e12"` = edge 12 of body b0; `"b0:s3.0"` = the silhouette (outline) of curved face 3.
 - Assemblies prefix the component: `"bolt/b0:e4"`; inside a sub-assembly `"s1/pin2.b0:e7"`.
 - Point refs append `.start`, `.end`, `.mid` or `.center` (circles and arcs): `"b0:e7.center"`.
-- Edge ids come from the current source geometry. **Read them from `kadvia:get_drawing`; never guess.** Pick an edge by its `shape`, `a`/`b` end points, `radius` and `visible` flag.
+- Edge ids come from the current source geometry. **Read them from `praxiscad:get_drawing`; never guess.** Pick an edge by its `shape`, `a`/`b` end points, `radius` and `visible` flag.
 - Free-form and elliptical edges are listed only with `all_edges: true`.
 - After a topology change in the source (a new hole, say), a dimension whose edge no longer exists reports an error instead of measuring the wrong thing.
 
@@ -123,7 +123,7 @@ and its holes as `{center, diameter, thru, depth, edge}`.
 - `axis`: `"x"` for horizontal distances, `"y"` for vertical ones. Optional `position` (where the set's text line goes) and `decimals`.
 - `origin` and `refs` are point refs; a bare line ref uses its end nearest the origin, a circle its centre.
 
-**Auto dimension** (on `kadvia:new_drawing`, or the `auto_dimension` op) adds per orthographic
+**Auto dimension** (on `praxiscad:new_drawing`, or the `auto_dimension` op) adds per orthographic
 view (not exploded views), skipping what another view already shows: overall width and height,
 one diameter per hole size with count and THRU/DEPTH (`"2X Ø6.6 THRU"`), hole positions from
 the left/bottom outline, and one radius per arc size (`"2X R3"`). Holes made with the hole
@@ -181,22 +181,22 @@ in a frame joined to a filled triangle on the edge.
   - `text` overrides work as for dimensions: `"<>"` = the automatic lines, `"\n"` separates lines.
 - Cosmetic threads are drawn as thin thread lines (ISO 6410-1): across the axis at the root diameter (internal threads hidden-dashed, or thin solid where a section cuts them) with a thread-limit line; in end views a thin ¾ circle. See [holes-threads.md](holes-threads.md#6-reading-holes-back-resizing-drawings).
 - Centre mark `{"type": "center_mark", "view", "refs": [circle]}` and centreline `{"type": "centerline", "view", "refs": [a, b]}`. Holes get both automatically.
-- Title block fields (`title_block` on `kadvia:new_drawing`, or `update_title_block`): `title`, `partNumber`, `material`, `author`, `date`, `revision`, `company`, `checked`, `tolerance` (for example `"ISO 2768-m"`). The title defaults to the source's name, the date to today, the revision to "A".
+- Title block fields (`title_block` on `praxiscad:new_drawing`, or `update_title_block`): `title`, `partNumber`, `material`, `author`, `date`, `revision`, `company`, `checked`, `tolerance` (for example `"ISO 2768-m"`). The title defaults to the source's name, the date to today, the revision to "A".
 - Automatic positions of symbols, balloons and frames avoid the views, view captions, dimension texts, the frame, the title block, BOM tables, hand-placed balloons and each other.
 
 ## 11. BOM tables, balloons, exploded views
 Assembly drawings only.
 - **BOM table:** `{"type": "bom_table", "position"?: [x, y], "structure"?: "top" | "indented" | "flat", "columns"?: [...], "density"?, "sheet"?}`.
   - `position` = the top-right corner in sheet mm (default just above the title block).
-  - `columns` from `item`, `name`, `quantity`, `file`, `volume`, `mass`, `material` (default item, name, quantity). `mass` uses the parts' materials (set with `kadvia:set_material`) unless `density` (g/cm³) is given; `material` shows the material names.
+  - `columns` from `item`, `name`, `quantity`, `file`, `volume`, `mass`, `material` (default item, name, quantity). `mass` uses the parts' materials (set with `praxiscad:set_material`) unless `density` (g/cm³) is given; `material` shows the material names.
   - `structure`: `top` (sub-assemblies as one row), `indented` (their contents under their row, numbered 3.1, 3.2) or `flat` (parts only, quantities summed over every level).
 - **Balloon:** `{"type": "balloon", "view", "refs": ["bolt/b0:e4.mid"], "position"?, "text"?}`: a circled item number with a leader ending in a dot on that component. The number comes from the BOM (the structure of the first BOM table), so it never drifts from the table.
 - **Auto balloon:** `{"op": "auto_balloon", "view"?, "replace"?, "spacing"?, "side"?}` adds one balloon per BOM item on its longest visible straight edge (default view: the iso view); items already ballooned in that view are skipped, `replace: true` redoes them. Placement: balloons start on a ring around the view in BOM order and are slid along it until no two circles are closer than `spacing` mm (default 2, allowed 0–100); balloons that would cover another view, a caption, a dimension text, the BOM table, the title block, the frame or a hand-placed balloon move to the nearest clear spot, and crossing leaders are uncrossed. `side` puts them all on one side of the view: `"around"` (default), `"left"`, `"right"`, `"top"` or `"bottom"`. The positions found are stored on the annotations (view coordinates), so the user can drag them afterwards. A `balloon` added without `position` is placed the same way.
 - **Exploded view:** a standard view with `explode`, e.g. `{"orientation": "iso", "explode": 1.5}`, moves every component away from the assembly centre by 1.5 × (its centre − the assembly centre). The caption reads "EXPLODED VIEW"; detail and section views of it are exploded too; auto dimension skips it. (This is independent of the 3D `set_exploded_view`.)
-- `kadvia:get_drawing` returns the drawing's `bom`: `{item, name, quantity, components}` per top-level row. It follows the assembly when components are added or removed.
+- `praxiscad:get_drawing` returns the drawing's `bom`: `{item, name, quantity, components}` per top-level row. It follows the assembly when components are added or removed.
 
 ## 12. Operations
-`kadvia:apply_drawing_operations {"model_id": "...", "operations": [...]}`:
+`praxiscad:apply_drawing_operations {"model_id": "...", "operations": [...]}`:
 
 | `op` | Fields |
 |---|---|
@@ -222,7 +222,7 @@ general tolerance, and give me a PDF and a DXF."
 
 Model `m1` is the L-bracket from [../examples/l-bracket.md](../examples/l-bracket.md)
 (50 × 60 × 40 mm, 5 mm thick, R5/R10 bend, 4 × Ø5.5 holes). Save it first
-(`kadvia:save_part {"model_id": "m1", "path": "~/cad/l-bracket.kadvia"}`, with the user's OK)
+(`praxiscad:save_part {"model_id": "m1", "path": "~/cad/l-bracket.pcad"}`, with the user's OK)
 so the drawing can be saved later.
 
 1. Create the drawing:
@@ -232,9 +232,9 @@ so the drawing can be saved later.
  "title_block": {"title": "L-bracket", "partNumber": "LB-060", "material": "AL 6061-T6",
                  "author": "A. Engineer", "tolerance": "ISO 2768-m"}}
 ```
-(`kadvia:new_drawing`) → drawing `m2`, first-angle, auto-dimensioned.
+(`praxiscad:new_drawing`) → drawing `m2`, first-angle, auto-dimensioned.
 
-2. `kadvia:get_drawing {"model_id": "m2"}`. Check:
+2. `praxiscad:get_drawing {"model_id": "m2"}`. Check:
    - the views (here `v1` front, `v2` top, `v3` right, `v4` iso; use the ids it returns);
    - overall sizes 50, 60 and 40 appear, the hole callouts read `2X Ø5.5 THRU`, the bend radii `R5` and `R10`;
    - `warnings` is empty.
@@ -254,17 +254,17 @@ so the drawing can be saved later.
     "text": "BREAK SHARP EDGES 0.3\nANODIZE CLEAR", "position": [20, 60]}}
 ]}
 ```
-   (`b0:e4` stands for the id you read from `kadvia:get_drawing`.) The detail view enlarges
+   (`b0:e4` stands for the id you read from `praxiscad:get_drawing`.) The detail view enlarges
    the bend around (5, 5) in front-view coordinates; the section cuts the top view along
    y = 15, through the base-leg holes at (35, ±15), showing they go through.
-4. `kadvia:get_drawing` again: the `t` dimension reads **5**, no warnings. Move views with
+4. `praxiscad:get_drawing` again: the `t` dimension reads **5**, no warnings. Move views with
    `move_view` if a new view overlaps the title block.
-5. With the user's OK: `kadvia:export_drawing {"model_id": "m2", "path": "~/cad/l-bracket.pdf"}`
+5. With the user's OK: `praxiscad:export_drawing {"model_id": "m2", "path": "~/cad/l-bracket.pdf"}`
    and `{"model_id": "m2", "path": "~/cad/l-bracket.dxf"}` (the format comes from the
-   extension), then `kadvia:save_part {"model_id": "m2", "path": "~/cad/l-bracket.kdraw"}`.
+   extension), then `praxiscad:save_part {"model_id": "m2", "path": "~/cad/l-bracket.pcdrw"}`.
 
-Follow-up: "Make it 80 wide." → `kadvia:set_parameters {"model_id": "m1", "values": {"width": 80}}`
-on the **part**; `kadvia:get_drawing {"model_id": "m2"}` now shows 80 instead of 60. Re-export
+Follow-up: "Make it 80 wide." → `praxiscad:set_parameters {"model_id": "m1", "values": {"width": 80}}`
+on the **part**; `praxiscad:get_drawing {"model_id": "m2"}` now shows 80 instead of 60. Re-export
 the PDF if the user wants the new revision (and bump `revision` in the title block).
 
 ## 14. Worked example: toleranced flange with GD&T
@@ -274,12 +274,12 @@ position tolerance."
 
 Model `m1` is the flange from [../examples/flange.md](../examples/flange.md): OD 140 × 14
 on Z = 0, hub Ø70 to Z = 34, bore Ø50, 6 × Ø11 on PCD 100 (one hole at (50, 0)), 1 mm
-chamfers. Saved as `~/cad/flange.kadvia`.
+chamfers. Saved as `~/cad/flange.pcad`.
 
-1. `kadvia:new_drawing {"source": "m1", "views": ["front", "top", "iso"], "title_block":
+1. `praxiscad:new_drawing {"source": "m1", "views": ["front", "top", "iso"], "title_block":
    {"title": "Hub flange", "partNumber": "FL-140", "material": "S235", "tolerance": "ISO 2768-m"}}`
    → drawing `m2` with `v1` front (x = X, y = Z), `v2` top (x = X, y = Y), `v3` iso.
-2. `kadvia:get_drawing {"model_id": "m2"}`. In `v2` the auto dimensions include the bore
+2. `praxiscad:get_drawing {"model_id": "m2"}`. In `v2` the auto dimensions include the bore
    diameter and `6X Ø11 THRU`; note their ids (here `d3` and `d4`). Find the edges you need:
    - `v2`: the bore circle (`shape: "circle"`, `radius` 25), and the bolt-hole circles centred at (50, 0) and (−50, 0) (`radius` 5.5);
    - `v1`: the bottom line (y = 0, x from −69 to 69 because of the chamfers), and the flange top line on the right (y = 14, from x = 35 to 69).
@@ -306,7 +306,7 @@ chamfers. Saved as `~/cad/flange.kadvia`.
 ```
    Here `b0:e1` is the bottom line, `b0:e9` the flange top line, `b0:e31` the bore circle and
    `b0:e40`/`b0:e46` the two opposite bolt-hole circles.
-4. `kadvia:get_drawing` again and check:
+4. `praxiscad:get_drawing` again and check:
    - the bore reads Ø50 H7 with (+0.025/0), the thickness `14 ±0.1`, the PCD `100` in a frame;
    - the frames: flatness 0.05 (no datum), perpendicularity Ø0.02 | A under the bore, position Ø0.2 Ⓜ | A | B under the bolt holes;
    - no `error` on any dimension and no warnings.
@@ -323,14 +323,14 @@ numbers, plus an exploded view on a second sheet. PDF please."
 
 Assembly `m4` is the bracket bolted to the plate from
 [assemblies.md](assemblies.md#7-worked-example-bracket-bolted-to-a-plate) (Plate, Bracket,
-Bolt). Save the three parts and then the assembly (`~/cad/bracket-on-plate.kasm`) with the
+Bolt). Save the three parts and then the assembly (`~/cad/bracket-on-plate.pcasm`) with the
 user's OK, so the drawing can be saved too.
 
-1. `kadvia:new_drawing {"source": "m4", "title_block": {"title": "Bracket on plate",
+1. `praxiscad:new_drawing {"source": "m4", "title_block": {"title": "Bracket on plate",
    "partNumber": "ASM-001"}}` → drawing `m5`: an A3 sheet with front, top, right and iso
    views (hidden lines across the parts: the bolt shaft is dashed inside the holes), overall
    sizes, a BOM table above the title block and balloons on the iso view.
-2. `kadvia:get_drawing {"model_id": "m5"}`: `sourceKind` is `assembly`; `bom` lists
+2. `praxiscad:get_drawing {"model_id": "m5"}`: `sourceKind` is `assembly`; `bom` lists
    1 Plate, 2 Bracket, 3 Bolt with quantity 1 each; the iso view has three balloons. Edge ids
    carry the component: `plate/b0:e…`, `bracket/b0:e…`, `bolt/b0:e…`.
 3. Add a section through the bolt, a mass column and the exploded sheet:
@@ -350,10 +350,10 @@ user's OK, so the drawing can be saved too.
 ```
    The section cuts the top view along y = 25 (through the bolt at (40, 25)), so the bolt is
    seen in its holes; every cut face is hatched alike.
-4. `kadvia:get_drawing`: `sheets` lists `s1` and `s2` ("Exploded"); view `ex` is on `s2`
+4. `praxiscad:get_drawing`: `sheets` lists `s1` and `s2` ("Exploded"); view `ex` is on `s2`
    with the caption "EXPLODED VIEW" and three balloons numbered like the BOM.
-5. With the user's OK: `kadvia:export_drawing {"model_id": "m5", "path": "~/cad/bracket-on-plate.pdf"}`
-   (two pages) and `kadvia:save_part {"model_id": "m5", "path": "~/cad/bracket-on-plate.kdraw"}`.
+5. With the user's OK: `praxiscad:export_drawing {"model_id": "m5", "path": "~/cad/bracket-on-plate.pdf"}`
+   (two pages) and `praxiscad:save_part {"model_id": "m5", "path": "~/cad/bracket-on-plate.pcdrw"}`.
    A DXF export writes `bracket-on-plate-1.dxf` and `bracket-on-plate-2.dxf`, or one file
    with `"sheet": "s2"`.
 
@@ -370,4 +370,4 @@ appears without a balloon.
 - Fits cover the ISO 286 letters and grades listed in [section 8](#8-tolerances-and-fits) up to 500 mm; a feature control frame takes at most 3 datums.
 - DXF R12 writes dimensions and symbols as plain lines and text (no associative dimensions), one file per sheet.
 - Wizard hole callouts and thread lines appear on part drawings only, not on assembly or STEP drawings.
-- Drawings that use the newer features (several sheets, assembly or STEP sources, tolerances, GD&T, balloons) cannot be opened by older Kadvia versions; tell the user if they share `.kdraw` files with someone on an older version (PDF/DXF are always fine).
+- Drawings that use the newer features (several sheets, assembly or STEP sources, tolerances, GD&T, balloons) cannot be opened by older PraxisCAD versions; tell the user if they share `.pcdrw` files with someone on an older version (PDF/DXF are always fine).

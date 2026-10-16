@@ -4,7 +4,7 @@ Constrained sketches can hold splines, ellipses, elliptical arcs, slots, arc slo
 conics and construction geometry besides points, lines, arcs and circles. Sketches can be edited
 with trim, extend, split, offset, fillet, chamfer, mirror, move/rotate/scale, patterns, explode
 and projected model edges. DXF files import as sketches, and any sketch exports as DXF. The live reference is
-`kadvia:modeling_reference {"topic": "sketch_tools"}` (basic entities, constraints and dimensions:
+`praxiscad:modeling_reference {"topic": "sketch_tools"}` (basic entities, constraints and dimensions:
 topic `constraints`).
 
 ## Contents
@@ -27,8 +27,8 @@ topic `constraints`).
 | Rectangles, circles, polygons, straight slots, line/arc paths | `profiles` (simplest; see [modeling-operations.md](modeling-operations.md#5-profiles)) |
 | Free-form outlines, ellipses, arc slots, text, conics | sketch `entities` (this page) |
 | Changing an existing sketch: trim, offset, fillet corners, mirror, pattern | `edit_sketch` (tool to preview, operation to commit) |
-| A laser-cut or legacy 2D outline the user has as a file | `kadvia:inspect_dxf` → `kadvia:import_dxf` → extrude |
-| A 2D outline for a laser or waterjet cutter, or for other CAD | `kadvia:export_model` with `sketch` (DXF) |
+| A laser-cut or legacy 2D outline the user has as a file | `praxiscad:inspect_dxf` → `praxiscad:import_dxf` → extrude |
+| A 2D outline for a laser or waterjet cutter, or for other CAD | `praxiscad:export_model` with `sketch` (DXF) |
 | Engraved or embossed lettering, serial numbers, logos in text | a `text` entity, then a cut or add extrude |
 
 ## 2. New sketch entities
@@ -83,7 +83,7 @@ expressions). Every entity takes `id` and `construction?: true`.
 | `radius`, `diameter` | arc slot: centre-line radius (also arcs and circles) |
 
 Large sketches (thousands of entities from a DXF) solve quickly; check them with
-`kadvia:solve_sketch` as usual.
+`praxiscad:solve_sketch` as usual.
 
 ## 4. Profiles from curves
 - Closed curves are loops of their own: circles, ellipses, closed splines, slots, arc slots and text glyphs. A loop inside another becomes a hole.
@@ -92,8 +92,8 @@ Large sketches (thousands of entities from a DXF) solve quickly; check them with
 
 ## 5. Editing sketches (edit_sketch)
 Two ways to apply the same edits:
-- **Preview:** `kadvia:edit_sketch {"model_id": "m1", "sketch": "s1", "edits": [...]}` (`sketch` = a stored sketch id or a sketch feature object). Nothing changes; the result lists the edited entities, constraints and dimensions, whether it solves, the number of closed regions, the ids `created` and the relations removed (`notes`).
-- **Commit:** `kadvia:apply_operations` with `{"op": "edit_sketch", "id": "s1", "edits": [...]}`: one undo step; a failing edit rolls back the whole batch.
+- **Preview:** `praxiscad:edit_sketch {"model_id": "m1", "sketch": "s1", "edits": [...]}` (`sketch` = a stored sketch id or a sketch feature object). Nothing changes; the result lists the edited entities, constraints and dimensions, whether it solves, the number of closed regions, the ids `created` and the relations removed (`notes`).
+- **Commit:** `praxiscad:apply_operations` with `{"op": "edit_sketch", "id": "s1", "edits": [...]}`: one undo step; a failing edit rolls back the whole batch.
 
 Edits apply in order to the **solved** geometry. Each is an object with `edit`:
 
@@ -129,12 +129,12 @@ point stays nearest to the same edge. Use it to sketch a lid outline from a box 
 pocket that follows an existing contour.
 
 ## 7. DXF import
-1. `kadvia:inspect_dxf {"path": "~/Downloads/plate.dxf"}` (optional `units`) → DXF version, layers (entity counts, frozen/off), units, importable entity counts, skipped types, extents in mm, warnings. Nothing changes.
-2. `kadvia:import_dxf {"path": ..., "model_id"?, "feature_id"?, "plane"?, "layers"?, "units"?, "scale"?, "origin"?, "tolerance"?, "text"?}`:
+1. `praxiscad:inspect_dxf {"path": "~/Downloads/plate.dxf"}` (optional `units`) → DXF version, layers (entity counts, frozen/off), units, importable entity counts, skipped types, extents in mm, warnings. Nothing changes.
+2. `praxiscad:import_dxf {"path": ..., "model_id"?, "feature_id"?, "plane"?, "layers"?, "units"?, "scale"?, "origin"?, "tolerance"?, "text"?}`:
    - without `model_id`: a **new part** named after the file with the sketch `dxf1` on XY;
    - with `model_id`: a new sketch (`dxf1`, `dxf2`, … or `feature_id`) in that part, on `plane` (any sketch plane, default `{"base": "XY"}`).
 3. Read `sketchId`, the `sketch` status/message (number of closed regions) and `import` (counts, merged points, duplicates removed, skipped, warnings).
-4. Extrude the sketch with `kadvia:apply_operations` (an outline with inner loops becomes a plate with holes).
+4. Extrude the sketch with `praxiscad:apply_operations` (an outline with inner loops becomes a plate with holes).
 
 | Option | Meaning |
 |---|---|
@@ -150,16 +150,16 @@ pocket that follows an existing contour.
 - Exact duplicates and zero-length curves are removed.
 
 ## 8. Exports
-- `kadvia:export_model` formats: `step` (exact geometry, CAD/CNC), `stl`, `3mf` (mesh package in mm, preferred by most slicers) and `obj` (mesh). The format comes from `format` or the file extension.
-- **Sketch as DXF** (laser or waterjet cutting, other CAD): `kadvia:export_model` with `sketch` (the sketch feature id from `kadvia:get_part`):
+- `praxiscad:export_model` formats: `step` (exact geometry, CAD/CNC), `stl`, `3mf` (mesh package in mm, preferred by most slicers) and `obj` (mesh). The format comes from `format` or the file extension.
+- **Sketch as DXF** (laser or waterjet cutting, other CAD): `praxiscad:export_model` with `sketch` (the sketch feature id from `praxiscad:get_part`):
 
 ```json
 {"model_id": "m1", "path": "~/cut/gasket.dxf", "sketch": "dxf1"}
 ```
   - The format is DXF when `sketch` is given and the path ends in `.dxf` or has no extension (`.dxf` is added); `"format": "dxf"` says it explicitly.
   - It writes the **solved** entities of that sketch in sketch coordinates (mm, 1:1), as DXF R12: lines, arcs, circles and points; splines, ellipses and text outlines as polylines. Normal geometry goes on layer `SKETCH`, construction geometry on layer `CONSTRUCTION` (tell the user to ignore or delete that layer for cutting).
-  - Parts only. Sketches made of `profiles` (rect, circle, …) export too. A drawing with views, dimensions and a title block goes through `kadvia:export_drawing` instead.
-  - Typical round trip: `kadvia:import_dxf` → edit the sketch (`edit_sketch` offset, fillet) → export it again as DXF for the cutter.
+  - Parts only. Sketches made of `profiles` (rect, circle, …) export too. A drawing with views, dimensions and a title block goes through `praxiscad:export_drawing` instead.
+  - Typical round trip: `praxiscad:import_dxf` → edit the sketch (`edit_sketch` offset, fillet) → export it again as DXF for the cutter.
 
 ## 9. Worked example: engrave text 0.5 mm deep
 **User:** "Engrave 'LOT 42' on the top of the plate, 5 mm high, 0.5 mm deep."
@@ -177,15 +177,15 @@ The part is a plate centred on the origin with its top face at Z = `thickness`.
 ```
 - The face plane has the same `[u, v]` as XY (u = +X), so `at: [0, -2.5]` with `align: "center"` centres the 5 mm capitals on the origin.
 - `direction: "reverse"` cuts into the material (the face normal points up).
-- Verify: `engrave` is `ok`; bbox unchanged; volume dropped by about the letter area × 0.5 (a few tens of mm³); `kadvia:render_views {"views": ["top"]}` shows readable text (not mirrored).
+- Verify: `engrave` is `ok`; bbox unchanged; volume dropped by about the letter area × 0.5 (a few tens of mm³); `praxiscad:render_views {"views": ["top"]}` shows readable text (not mirrored).
 - **Emboss** instead: same sketch, `"direction": "normal"`, `"operation": "add"`.
 - Process rules: strokes and depth at least 0.6 mm for FDM; for CNC engraving use a height of at least 3 mm with a small cutter, and mention the cutter size. For text on the side of a part, sketch on that face (for example `{"face": {"normal": "-Y", "plane": "min_y"}}`).
 
 ## 10. Worked example: import a DXF outline and extrude it 3 mm
 **User:** "Here's ~/Downloads/gasket.dxf. Make it a 3 mm part."
 
-1. `kadvia:inspect_dxf {"path": "~/Downloads/gasket.dxf"}` → for example units `in`, layers `OUTLINE` (12 entities) and `NOTES` (text), extents 4.0 × 2.5 in (101.6 × 63.5 mm). Note the units and the layers to keep.
-2. `kadvia:import_dxf {"path": "~/Downloads/gasket.dxf", "layers": ["OUTLINE"], "origin": "center"}` → a new part (`modelId`), `sketchId` `"dxf1"`, sketch message with the region count (an outline with 4 bolt holes = one region with holes).
+1. `praxiscad:inspect_dxf {"path": "~/Downloads/gasket.dxf"}` → for example units `in`, layers `OUTLINE` (12 entities) and `NOTES` (text), extents 4.0 × 2.5 in (101.6 × 63.5 mm). Note the units and the layers to keep.
+2. `praxiscad:import_dxf {"path": "~/Downloads/gasket.dxf", "layers": ["OUTLINE"], "origin": "center"}` → a new part (`modelId`), `sketchId` `"dxf1"`, sketch message with the region count (an outline with 4 bolt holes = one region with holes).
 3. Extrude:
 ```json
 [
@@ -193,8 +193,8 @@ The part is a plate centred on the origin with its top face at Z = `thickness`.
   {"op": "add_feature", "feature": {"id": "plate", "type": "extrude", "sketch": "dxf1", "distance": "thickness"}}
 ]
 ```
-4. Verify: bbox `size` = the DXF extents in mm × 3 (101.6 × 63.5 × 3); volume ≈ outline area × 3; `kadvia:render_views {"views": ["top", "iso"]}`.
-5. Offer a material (`kadvia:set_material`), `kadvia:save_part` and `kadvia:export_model` (STEP for the cutter, 3MF/STL for printing).
+4. Verify: bbox `size` = the DXF extents in mm × 3 (101.6 × 63.5 × 3); volume ≈ outline area × 3; `praxiscad:render_views {"views": ["top", "iso"]}`.
+5. Offer a material (`praxiscad:set_material`), `praxiscad:save_part` and `praxiscad:export_model` (STEP for the cutter, 3MF/STL for printing).
 
 If the region count is 0 or the extrude fails, the outline has gaps: re-import with a larger
 `tolerance` (for example 0.05) as a new sketch (`"feature_id": "dxf2"`, then delete `dxf1`), or
@@ -217,11 +217,11 @@ the original as construction.
   ]}
 ]
 ```
-2. `kadvia:get_part` (or a preview with `kadvia:edit_sketch`) gives the ids of the four new arcs.
-   Preview the offset with `kadvia:edit_sketch {"model_id": "m1", "sketch": "s1", "edits": [{"edit": "offset", "entities": ["l1", "l2", "l3", "l4", "<arc ids>"], "distance": 2, "constructionBase": true}]}`:
+2. `praxiscad:get_part` (or a preview with `praxiscad:edit_sketch`) gives the ids of the four new arcs.
+   Preview the offset with `praxiscad:edit_sketch {"model_id": "m1", "sketch": "s1", "edits": [{"edit": "offset", "entities": ["l1", "l2", "l3", "l4", "<arc ids>"], "distance": 2, "constructionBase": true}]}`:
    it should solve with one closed region (the closed chain goes outward without `side`).
 3. Commit the same edit with `{"op": "edit_sketch", "id": "s1", "edits": [...]}` and check the
-   feature status and `kadvia:render_views`.
+   feature status and `praxiscad:render_views`.
 
 ## 12. Limits
 - Splines, ellipses and conics become fine arcs in solids and STEP (not exact free-form curves).

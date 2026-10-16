@@ -1,8 +1,8 @@
 # Surface analysis (class A checks)
 
-`kadvia:analyze_surfaces` measures how well the faces of a part or imported STEP model join, and
-`kadvia:set_display_mode` `zebra` / `curvature` plus `kadvia:render_views` show it. The live
-reference is `kadvia:modeling_reference {"topic": "surface_analysis"}`.
+`praxiscad:analyze_surfaces` measures how well the faces of a part or imported STEP model join, and
+`praxiscad:set_display_mode` `zebra` / `curvature` plus `praxiscad:render_views` show it. The live
+reference is `praxiscad:modeling_reference {"topic": "surface_analysis"}`.
 
 ## Contents
 1. [Continuity levels](#1-continuity-levels)
@@ -44,9 +44,9 @@ surfaces 0.1 degrees or less and 5-10 % curvature. Use the user's numbers when g
 - Only exact B-rep faces are analysed; mesh-only bodies give an info issue.
 
 ## 4. Looking at it
-1. `kadvia:set_display_mode {"mode": "zebra"}` then `kadvia:render_views` (iso and a side view); repeat with `"direction": "horizontal"`.
-2. `kadvia:set_display_mode {"mode": "curvature", "kind": "mean"}` then `kadvia:render_views`.
-3. `kadvia:set_display_mode {"mode": "shaded-edges"}` when done.
+1. `praxiscad:set_display_mode {"mode": "zebra"}` then `praxiscad:render_views` (iso and a side view); repeat with `"direction": "horizontal"`.
+2. `praxiscad:set_display_mode {"mode": "curvature", "kind": "mean"}` then `praxiscad:render_views`.
+3. `praxiscad:set_display_mode {"mode": "shaded-edges"}` when done.
 
 ## 5. Workflow
 Analyze with the level the design needs, look at zebra and curvature, explain the failing edges

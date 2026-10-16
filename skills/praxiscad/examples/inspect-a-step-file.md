@@ -1,12 +1,12 @@
 # Example: inspect a STEP file
 
-**User:** "Open ~/Downloads/bracket.step in Kadvia. How big is it and roughly how much would it weigh in aluminium?"
+**User:** "Open ~/Downloads/bracket.step in PraxisCAD. How big is it and roughly how much would it weigh in aluminium?"
 
 **AI assistant:**
-1. `kadvia:kadvia_status` → app running, window ready, nothing open.
-2. `kadvia:open_step_file { "path": "~/Downloads/bracket.step" }` → model `m1`, 1 body, 117 faces,
+1. `praxiscad:praxiscad_status` → app running, window ready, nothing open.
+2. `praxiscad:open_step_file { "path": "~/Downloads/bracket.step" }` → model `m1`, 1 body, 117 faces,
    bbox size 152.4 × 101.6 × 25.4 mm, volume 118,403 mm³, no warnings.
-3. `kadvia:render_views { "views": ["iso", "top", "front"] }` → checks the part looks complete
+3. `praxiscad:render_views { "views": ["iso", "top", "front"] }` → checks the part looks complete
    (no missing faces) and notes features: two slots, four mounting holes, a central boss.
 4. Answer:
 
@@ -18,5 +18,5 @@ Why this works: numbers come from tool results (with units), the shape descripti
 from looking at the renders, and the mass formula is shown.
 
 To change the geometry (resize holes, remove fillets, move faces), convert it first:
-`kadvia:convert_to_part {"model_id": "m1"}`, then follow
+`praxiscad:convert_to_part {"model_id": "m1"}`, then follow
 [../references/editing-step.md](../references/editing-step.md).

@@ -2,7 +2,7 @@
 
 Rules of thumb for making parts that can actually be produced. Use them as defaults when the
 user doesn't specify, and say which ones you assumed. The supplier's or machine's own limits
-always win. `kadvia:check_design` checks most of these rules automatically for a chosen
+always win. `praxiscad:check_design` checks most of these rules automatically for a chosen
 process; see [design-check.md](design-check.md).
 
 ## Contents
@@ -54,7 +54,7 @@ for checking results and for things the wizard doesn't make (nuts, washers, boss
 | Clearance between mating parts (per side) | 0.2 (snug) – 0.4 (sliding) | 0.1–0.2 | 0.3–0.5 |
 | Overhangs | ≤ 45° from vertical without support; bridges ≤ ~10 mm | supports needed | self-supporting |
 
-- **Orientation:** put the largest flat face on the bed (Z = 0 in Kadvia). Vertical holes come out rounder than horizontal ones.
+- **Orientation:** put the largest flat face on the bed (Z = 0 in PraxisCAD). Vertical holes come out rounder than horizontal ones.
 - **Bottom edges:** chamfer them 0.4–0.6 mm against elephant's foot, rather than filleting.
 - **Screws into plastic:**
   - Self-tapping M3: pilot hole 2.5 mm in a boss of OD 6–8 mm.
@@ -73,9 +73,9 @@ for checking results and for things the wizard doesn't make (nuts, washers, boss
 - **Tolerances:** ±0.1 mm by default. Ask before specifying anything tighter. Put the tight ones on the drawing (ISO fits such as H7 for bearing seats and dowel holes, GD&T for datum-related features; see [drawings.md](drawings.md#8-tolerances-and-fits)).
 
 ## 5. Sheet metal
-Kadvia has no bend, flange or unfold features yet. Model sheet-metal parts as a solid with
+PraxisCAD has no bend, flange or unfold features yet. Model sheet-metal parts as a solid with
 **uniform thickness `t`**, for example an extruded path profile, and follow these rules so a
-fabricator can unfold the part. `kadvia:check_design` with `"process": "sheet_metal"` checks
+fabricator can unfold the part. `praxiscad:check_design` with `"process": "sheet_metal"` checks
 uniform thickness, bend radii and hole placement.
 - **Inside bend radius:** at least 1×t for mild steel and 5052 aluminium, at least 1.5–2×t for 6061-T6 and stainless. Outside radius = inside radius + t.
 - **Minimum flange length:** at least 4×t, or 3×t + inside radius.
@@ -86,7 +86,7 @@ uniform thickness, bend radii and hole placement.
 ## 6. Injection molding (awareness)
 - Keep walls uniform at 1.5–3 mm (ABS 1.2–3.5 mm). Make ribs 50–60% of the wall thickness.
 - Inside radius should be at least 0.5×t, and outside radius = inside radius + t.
-- Molded parts need draft, typically 1–2° (more on textured faces). Model it with `draftAngle` on the extrude or a `draft` feature on the walls (before filleting them), and check it with `kadvia:check_design` (`"process": "injection"`, `build_direction` = the pull direction).
+- Molded parts need draft, typically 1–2° (more on textured faces). Model it with `draftAngle` on the extrude or a `draft` feature on the walls (before filleting them), and check it with `praxiscad:check_design` (`"process": "injection"`, `build_direction` = the pull direction).
 - Core out thick sections (a `shell`, or pockets from the back) so walls stay uniform.
 
 ## 7. Fillets and chamfers
@@ -106,9 +106,9 @@ uniform thickness, bend radii and hole placement.
 - Prefer profile corner radii (`cornerRadius`) for vertical corners. They are more robust than filleting afterwards.
 
 ## 8. Densities
-Prefer `kadvia:set_material` with a library material (see
+Prefer `praxiscad:set_material` with a library material (see
 [materials-appearance.md](materials-appearance.md#2-material-library)): mass, BOMs and drawings
-then use it automatically. For a quick what-if, pass `density_g_cm3` to `kadvia:mass_properties`:
+then use it automatically. For a quick what-if, pass `density_g_cm3` to `praxiscad:mass_properties`:
 
 | Material | g/cm³ |
 |---|---|

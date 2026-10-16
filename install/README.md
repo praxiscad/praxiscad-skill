@@ -1,52 +1,52 @@
-# Install Kadvia and connect your AI client
+# Install PraxisCAD and connect your AI client
 
 ## 1. Install the app
-Download Kadvia for macOS (.dmg) or Windows (installer) from the Kadvia website and open it
-once. Your AI can only work with Kadvia while the app is running.
+Download PraxisCAD for macOS (.dmg) or Windows (installer) from the PraxisCAD website and open it
+once. Your AI can only work with PraxisCAD while the app is running.
 
 Latest version, direct links:
-- macOS (Apple silicon and Intel): https://kadvia.saurabhkeskar3.workers.dev/get/macos
-- Windows installer: https://kadvia.saurabhkeskar3.workers.dev/get/windows
-- Windows MSI: https://kadvia.saurabhkeskar3.workers.dev/get/windows-msi
+- macOS (Apple silicon and Intel): https://praxiscad.com/get/macos
+- Windows installer: https://praxiscad.com/get/windows
+- Windows MSI: https://praxiscad.com/get/windows-msi
 
-If you use this skill and Kadvia is not installed, your AI will offer these links and ask before
+If you use this skill and PraxisCAD is not installed, your AI will offer these links and ask before
 downloading anything.
 
 ## 2. Connect your AI client
-Kadvia ships a small MCP server, `kadvia-mcp`, inside the app. In Kadvia open
+PraxisCAD ships a small MCP server, `praxiscad-mcp`, inside the app. In PraxisCAD open
 **AI → Connect AI assistant**: it lists the AI clients installed on your computer and connects
 them with one click (it shows what it will write and backs up the client's config first).
 
 ### By hand
-Add a stdio MCP server named `kadvia` whose command is the absolute path to `kadvia-mcp`:
-- macOS: `/Applications/Kadvia.app/Contents/MacOS/kadvia-mcp`
-- Windows: `kadvia-mcp.exe` next to `Kadvia.exe` in the install folder
+Add a stdio MCP server named `praxiscad` whose command is the absolute path to `praxiscad-mcp`:
+- macOS: `/Applications/PraxisCAD.app/Contents/MacOS/praxiscad-mcp`
+- Windows: `praxiscad-mcp.exe` next to `PraxisCAD.exe` in the install folder
 
 Most clients use this JSON shape in their MCP config:
 
 ```json
-{ "mcpServers": { "kadvia": { "command": "/Applications/Kadvia.app/Contents/MacOS/kadvia-mcp" } } }
+{ "mcpServers": { "praxiscad": { "command": "/Applications/PraxisCAD.app/Contents/MacOS/praxiscad-mcp" } } }
 ```
 
 | Client | Config |
 |---|---|
 | Claude Desktop | `claude_desktop_config.json` (Settings → Developer → Edit Config); restart Claude |
-| Claude Code | `claude mcp add --scope user kadvia -- "/Applications/Kadvia.app/Contents/MacOS/kadvia-mcp"` |
+| Claude Code | `claude mcp add --scope user praxiscad -- "/Applications/PraxisCAD.app/Contents/MacOS/praxiscad-mcp"` |
 | Cursor | `~/.cursor/mcp.json` |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` |
 | Gemini CLI | `~/.gemini/settings.json` |
 | LM Studio (local models) | `~/.lmstudio/mcp.json` |
-| VS Code (Copilot agent mode) | user `mcp.json`: `{"servers": {"kadvia": {"type": "stdio", "command": "<path>"}}}` |
-| OpenAI Codex CLI | `~/.codex/config.toml`: `[mcp_servers.kadvia]` + `command = "<path>"` |
+| VS Code (Copilot agent mode) | user `mcp.json`: `{"servers": {"praxiscad": {"type": "stdio", "command": "<path>"}}}` |
+| OpenAI Codex CLI | `~/.codex/config.toml`: `[mcp_servers.pcad]` + `command = "<path>"` |
 
 Config locations can change between client versions — check your client's MCP documentation.
 Clients that only support **remote** MCP servers over HTTPS (for example the ChatGPT apps) are
 not supported yet; a remote connector is planned.
 
 ## 3. Check it works
-Ask your AI: *"Is Kadvia running?"* — it calls `kadvia_status` and reports the app version.
-Then try: *"Make a 50 mm cube with a 20 mm hole through it in Kadvia."* The part appears in the
-Kadvia window as the AI builds it, and Kadvia shows which assistant made the change. Follow up
+Ask your AI: *"Is PraxisCAD running?"* — it calls `praxiscad_status` and reports the app version.
+Then try: *"Make a 50 mm cube with a 20 mm hole through it in PraxisCAD."* The part appears in the
+PraxisCAD window as the AI builds it, and PraxisCAD shows which assistant made the change. Follow up
 with *"Check it for 3D printing"* (design check) or *"Make a drawing of it and export a PDF"*.
 
 ## 4. Optional: add the instructions
@@ -54,12 +54,12 @@ The MCP server already sends core instructions. For better results add this repo
 guidance (design rules, workflows for standard holes and threads, sketch tools and DXF
 import/export, materials and renders, assemblies and motion, drawings, STEP editing and design
 checks, worked examples):
-- clients with Agent Skills support: copy `skills/kadvia` into the client's skills folder
-  (for example `~/.claude/skills/kadvia`), or upload the zipped folder as a skill;
+- clients with Agent Skills support: copy `skills/praxiscad` into the client's skills folder
+  (for example `~/.claude/skills/praxiscad`), or upload the zipped folder as a skill;
 - other clients: use `instructions/AGENTS.md` as project rules or a system prompt (see the
   main [README](../README.md#quick-start) for where each client reads it).
 
-Update to the latest version (v0.10) whenever you update Kadvia; older copies don't describe
+Update to the latest version (v0.11) whenever you update PraxisCAD; older copies don't describe
 the newer tools.
 
 ## Privacy

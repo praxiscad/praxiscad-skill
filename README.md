@@ -1,8 +1,8 @@
-# Kadvia — Text-to-CAD and Image-to-CAD with any AI assistant (MCP skill)
+# PraxisCAD — Text-to-CAD and Image-to-CAD with any AI assistant (MCP skill)
 
 **Describe a part in plain words, or show your AI a sketch or photo, and get a real, editable
 parametric 3D CAD model** — with STEP/STL export, 2D drawings, assemblies and manufacturability
-checks. This is the open skill and instruction set for **Kadvia**, an AI-native desktop CAD app
+checks. This is the open skill and instruction set for **PraxisCAD**, an AI-native desktop CAD app
 for macOS and Windows with a built-in MCP (Model Context Protocol) server.
 
 > Example prompts: *"Make a 60 × 40 × 5 mm aluminium mounting plate with four M4 clearance holes
@@ -11,7 +11,7 @@ for macOS and Windows with a built-in MCP (Model Context Protocol) server.
 
 Design, edit and check CAD parts by chatting with **any AI assistant** that supports MCP —
 Claude, ChatGPT/Codex, Gemini, Cursor, VS Code Copilot, Windsurf, LM Studio with local models,
-and more. Kadvia is a desktop CAD app with a built-in MCP server; this repository teaches your
+and more. PraxisCAD is a desktop CAD app with a built-in MCP server; this repository teaches your
 AI assistant how to use it well:
 - build **parametric parts** from a description, or from a photo or drawing traced as a
   calibrated **reference image**, with named dimensions you can change later;
@@ -41,10 +41,10 @@ AI assistant how to use it well:
 - verify everything with exact mass properties, measurements and screenshots from any angle
   (custom directions, perspective, sections) of **one model at a time**, or of chosen bodies
   only (hide the lid to look inside), without touching your other open models, and **point at
-  faces** by highlighting them in your Kadvia window;
-- save `.kadvia` / `.kasm` / `.kdraw`, or export STEP, STL, 3MF, OBJ or a sketch as DXF.
+  faces** by highlighting them in your PraxisCAD window;
+- save `.pcad` / `.pcasm` / `.pcdrw`, or export STEP, STL, 3MF, OBJ or a sketch as DXF.
 
-> Status: preview (v0.10). Adds install guidance when Kadvia is missing, loft end conditions (tangent/curvature), boundary solids through sections and guide curves, curvature-continuous fillets, and surface analysis to verify G1/G2 seams. Parametric modeling (sketch, extrude, revolve, holes, fillets and
+> Status: preview (v0.11). Renamed Kadvia → PraxisCAD; new file extensions .pcad/.pcasm/.pcdrw. Adds install guidance when PraxisCAD is missing, loft end conditions (tangent/curvature), boundary solids through sections and guide curves, curvature-continuous fillets, and surface analysis to verify G1/G2 seams. Parametric modeling (sketch, extrude, revolve, holes, fillets and
 > chamfers including mixed convex/concave corners, patterns, mirror, loft, sweep, shell, draft),
 > hole wizard and threads, sketch tools and DXF import/export, materials, appearances and
 > product renders, reference images, imported-STEP editing (mesh-only bodies kept), assemblies
@@ -52,9 +52,9 @@ AI assistant how to use it well:
 > and assemblies with tolerances, GD&T, hole callouts, BOM and collision-free balloons, design
 > check with feature-aware hole sizes, viewing (per-model renders, isolated bodies, custom
 > angles, perspective, sections), selection highlighting, rebuild and inspection, and safe
-> handling of long operations (request ids, operation status, no blind retries). Matches Kadvia 0.3.7.
+> handling of long operations (request ids, operation status, no blind retries). Matches PraxisCAD 0.3.8.
 
-The Kadvia MCP server already sends core instructions to every client, so this repository is
+The PraxisCAD MCP server already sends core instructions to every client, so this repository is
 optional — it makes results better (design rules, workflows, worked examples).
 
 ## What's here
@@ -62,25 +62,25 @@ optional — it makes results better (design rules, workflows, worked examples).
 | Path | For |
 |---|---|
 | `instructions/AGENTS.md` | **Any AI client**: use as Cursor rules, Codex `AGENTS.md`, Gemini `GEMINI.md`, VS Code Copilot instructions, or a system prompt |
-| `skills/kadvia/` | The same guidance in the open **Agent Skills** format (`SKILL.md` + references + examples), e.g. for Claude |
-| `skills/kadvia/references/` | Modeling operations, holes and threads, sketch tools and DXF import/export, materials and appearance, image-to-CAD and reference images, editing STEP files, assemblies, drawings, design check, design rules (DFM), views & conventions, troubleshooting |
-| `skills/kadvia/examples/` | Worked examples: L-bracket, flange, enclosure, inspecting a STEP file (more in each reference: M5 tapped and M6 counterbored holes, engraved text, DXF outline to part and back to DXF, anodised aluminium product render, bracket-on-plate assembly, gear pair, L-bracket drawing, toleranced flange drawing with GD&T, assembly drawing with BOM and balloons, STEP hole resize, CNC design-check fix, photo tracing) |
-| `install/README.md` | Install Kadvia and connect your AI client |
+| `skills/praxiscad/` | The same guidance in the open **Agent Skills** format (`SKILL.md` + references + examples), e.g. for Claude |
+| `skills/praxiscad/references/` | Modeling operations, holes and threads, sketch tools and DXF import/export, materials and appearance, image-to-CAD and reference images, editing STEP files, assemblies, drawings, design check, design rules (DFM), views & conventions, troubleshooting |
+| `skills/praxiscad/examples/` | Worked examples: L-bracket, flange, enclosure, inspecting a STEP file (more in each reference: M5 tapped and M6 counterbored holes, engraved text, DXF outline to part and back to DXF, anodised aluminium product render, bracket-on-plate assembly, gear pair, L-bracket drawing, toleranced flange drawing with GD&T, assembly drawing with BOM and balloons, STEP hole resize, CNC design-check fix, photo tracing) |
+| `install/README.md` | Install PraxisCAD and connect your AI client |
 
 ## Quick start
-1. Install and open Kadvia (macOS or Windows) — see [install/README.md](install/README.md). Latest builds: [macOS](https://kadvia.saurabhkeskar3.workers.dev/get/macos), [Windows](https://kadvia.saurabhkeskar3.workers.dev/get/windows).
-2. In Kadvia choose **AI → Connect AI assistant** and click Connect next to your client
-   (or add the `kadvia` MCP server to your client's config by hand).
+1. Install and open PraxisCAD (macOS or Windows) — see [install/README.md](install/README.md). Latest builds: [macOS](https://praxiscad.com/get/macos), [Windows](https://praxiscad.com/get/windows).
+2. In PraxisCAD choose **AI → Connect AI assistant** and click Connect next to your client
+   (or add the `praxiscad` MCP server to your client's config by hand).
 3. Optional — add the instructions:
-   - **Cursor:** copy `instructions/AGENTS.md` to `.cursor/rules/kadvia.mdc` in your project.
+   - **Cursor:** copy `instructions/AGENTS.md` to `.cursor/rules/praxiscad.mdc` in your project.
    - **OpenAI Codex CLI:** put it in your project's `AGENTS.md`.
    - **Gemini CLI:** put it in `GEMINI.md`.
    - **VS Code Copilot:** `.github/copilot-instructions.md`.
-   - **Claude:** copy `skills/kadvia` to `~/.claude/skills/kadvia` (Claude Code) or upload the zipped folder as a skill (Claude apps).
+   - **Claude:** copy `skills/praxiscad` to `~/.claude/skills/praxiscad` (Claude Code) or upload the zipped folder as a skill (Claude apps).
    - **Other clients:** paste `instructions/AGENTS.md` into the system prompt.
-4. Ask your AI: *"In Kadvia, make a 100 × 60 × 6 mm aluminium plate with four M5 holes 10 mm from the corners."*
+4. Ask your AI: *"In PraxisCAD, make a 100 × 60 × 6 mm aluminium plate with four M5 holes 10 mm from the corners."*
 
-Works best with models that accept images (they can look at Kadvia's renders); text-only models
+Works best with models that accept images (they can look at PraxisCAD's renders); text-only models
 still get every number (bounding box, volume, mass).
 
 ## Example prompts
@@ -110,9 +110,9 @@ still get every number (bounding box, volume, mass).
 - "Make the feet black rubber and the top face polished."
 
 **Image-to-CAD**
-- "Here's a photo of a bracket next to a ruler. Rebuild it in Kadvia as a parametric part."
+- "Here's a photo of a bracket next to a ruler. Rebuild it in PraxisCAD as a parametric part."
 - "Put ~/Pictures/bracket-front.jpg on the front plane, the base is 100 mm wide, and trace it."
-- "Recreate this drawing (attached) in Kadvia. Ask me if any dimension is unclear."
+- "Recreate this drawing (attached) in PraxisCAD. Ask me if any dimension is unclear."
 
 **Editing STEP files**
 - "Open ~/Downloads/mount.step, make all the Ø6 holes Ø6.6 and remove the fillets, then export a new STEP."
@@ -152,10 +152,10 @@ still get every number (bounding box, volume, mass).
 
 **Checking and exporting**
 - "What does this part weigh in PETG? Is any wall thinner than 1.2 mm?"
-- "Save it as ~/parts/bracket.kadvia and export a STEP for the machinist."
+- "Save it as ~/parts/bracket.pcad and export a STEP for the machinist."
 - "Export a 3MF for my slicer."
 - "Open ~/Downloads/part.step and tell me its size and volume, in inches too."
-- "I clicked a face in Kadvia. What is its area?"
+- "I clicked a face in PraxisCAD. What is its area?"
 - "Which face is too thin? Highlight it for me."
 - "Show me the underside in perspective, and turn on a section through the bore."
 - "Render the housing without its lid so I can see the bosses — leave my other parts open."
@@ -164,14 +164,14 @@ still get every number (bounding box, volume, mass).
 ## FAQ
 
 **Is this text-to-CAD?** Yes. Your AI assistant turns a written description into a parametric
-model in Kadvia, with named dimensions you can change later, not a one-off mesh.
+model in PraxisCAD, with named dimensions you can change later, not a one-off mesh.
 
 **Is this image-to-CAD?** Your AI assistant reads a photo, sketch or drawing and builds the model
-in Kadvia; you can also trace a calibrated reference image. Accuracy depends on the dimensions you
+in PraxisCAD; you can also trace a calibrated reference image. Accuracy depends on the dimensions you
 give.
 
 **Which AI assistants work?** Any assistant or agent that supports MCP tools. The skill is
-model-agnostic, and you use your own AI subscription; Kadvia does not charge for AI usage.
+model-agnostic, and you use your own AI subscription; PraxisCAD does not charge for AI usage.
 
 **What file formats?** STEP import/export, STL, 3MF and OBJ export, DXF import/export, and PDF, DXF
 or SVG drawings.
