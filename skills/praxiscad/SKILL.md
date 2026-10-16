@@ -3,7 +3,7 @@ name: praxiscad
 description: Designs, edits and inspects mechanical CAD in the PraxisCAD desktop app through its MCP server. Builds parametric parts from text, photos, drawings or DXF files (sketches with splines and text, extrudes, revolves, tapped/counterbored holes, threads, fillets, patterns, lofts, sweeps, shells; named parameters), traces calibrated reference images, edits imported STEP files (resize holes, remove fillets), assembles parts with mates (gears, cams, limits; DOF, motion, BOM, interference), makes 2D drawings (tolerances, GD&T, BOM, balloons; PDF/DXF/SVG), assigns materials (mass, product renders), and checks manufacturability for CNC, 3D printing, molding and sheet metal. Verifies with exact mass and per-model renders from any angle; highlights faces; saves .pcad/.pcasm/.pcdrw or exports STEP/STL/3MF/OBJ and sketch DXF. Use when the user asks to model, design, modify, measure, assemble, draw, render, check or export a CAD part, STEP or DXF file, shares an image of a part to rebuild, or mentions PraxisCAD.
 compatibility: Requires the PraxisCAD desktop app (macOS or Windows) running, with its MCP server ("praxiscad") connected to an MCP-capable AI client.
 metadata:
-  version: "0.11.0"
+  version: "0.12.0"
 ---
 
 # PraxisCAD

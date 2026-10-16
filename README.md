@@ -44,7 +44,7 @@ AI assistant how to use it well:
   faces** by highlighting them in your PraxisCAD window;
 - save `.pcad` / `.pcasm` / `.pcdrw`, or export STEP, STL, 3MF, OBJ or a sketch as DXF.
 
-> Status: preview (v0.11). File extensions .pcad/.pcasm/.pcdrw. Adds install guidance when PraxisCAD is missing, loft end conditions (tangent/curvature), boundary solids through sections and guide curves, curvature-continuous fillets, and surface analysis to verify G1/G2 seams. Parametric modeling (sketch, extrude, revolve, holes, fillets and
+> Status: preview (v0.12). File extensions .pcad/.pcasm/.pcdrw. Adds install guidance when PraxisCAD is missing, loft end conditions (tangent/curvature), boundary solids through sections and guide curves, curvature-continuous fillets, and surface analysis to verify G1/G2 seams. Parametric modeling (sketch, extrude, revolve, holes, fillets and
 > chamfers including mixed convex/concave corners, patterns, mirror, loft, sweep, shell, draft),
 > hole wizard and threads, sketch tools and DXF import/export, materials, appearances and
 > product renders, reference images, imported-STEP editing (mesh-only bodies kept), assemblies
@@ -56,6 +56,34 @@ AI assistant how to use it well:
 
 The PraxisCAD MCP server already sends core instructions to every client, so this repository is
 optional — it makes results better (design rules, workflows, worked examples).
+
+## Beta and first launch
+
+> **Beta.** PraxisCAD is in beta: expect rough edges, and please report anything odd.
+
+### First launch (the app is not code-signed yet)
+PraxisCAD is not yet signed with an Apple Developer ID, so every Mac shows a one-time warning.
+The warning is about the missing signature, not about anything found in the app; signed builds are coming soon.
+
+**macOS**
+1. Open the downloaded `.dmg` and drag **PraxisCAD** to **Applications**.
+2. Open PraxisCAD. macOS says it could not verify the app. Click **Done** (not Move to Bin).
+3. Open **System Settings → Privacy & Security**, scroll down, click **Open Anyway** next to PraxisCAD, and confirm.
+   You only need to do this once.
+
+**Windows:** if SmartScreen appears, click **More info → Run anyway**.
+
+## What your AI can do with PraxisCAD
+
+Real results from plain-language requests to an MCP-capable AI client:
+
+<table>
+<tr><td width="50%" valign="top"><img src="docs/images/bracket-iso.webp" width="100%" alt="An L-shaped aluminium mounting bracket with four holes and a rounded inner bend, in an isometric view."><br><sub><b>Ask:</b> "Make an L-shaped mounting bracket from 6061 aluminium, 60 mm wide, 5 mm thick, two 5.5 mm holes in each leg, 5 mm radius on the inside bend."<br><b>The AI:</b> builds a parametric bracket with named dimensions.</sub></td><td width="50%" valign="top"><img src="docs/images/enclosure-exploded.webp" width="100%" alt="A rounded electronics enclosure and its lid shown in an exploded isometric view, with the screws lifted above the screw bosses."><br><sub><b>Ask:</b> "Build an 80 x 60 x 30 mm enclosure with 2.5 mm walls and four screw bosses, add a lid, check interference, show it exploded."<br><b>The AI:</b> models the parts, assembles them with mates and shows an exploded view.</sub></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/images/gear-pair.webp" width="100%" alt="Two meshing spur gears of different sizes with a bore and keyway, seen from above with the teeth interleaved."><br><sub><b>Ask:</b> "Make two spur gears, 20 and 40 teeth, 60 mm apart, linked so the big one turns at the right ratio."<br><b>The AI:</b> creates both gears (teeth are simplified) and links them with a gear mate.</sub></td><td width="50%" valign="top"><img src="docs/images/step-import.webp" width="100%" alt="A round flanged cover with six bolt holes, opened from a STEP file and converted to an editable part."><br><sub><b>Ask:</b> "Open this STEP file, make it editable and make the six bolt holes 8 mm instead of 6 mm. Export it again."<br><b>The AI:</b> imports the STEP, lists its features, enlarges the holes and re-exports.</sub></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/images/drawing-sheet.webp" width="100%" alt="A landscape drawing sheet of the mounting bracket with front, top and side views, dimensions, tolerances and a title block."><br><sub><b>Ask:</b> "Make an A3 drawing of the bracket with front, top, right and isometric views, dimensions and a title block. Export a PDF."<br><b>The AI:</b> lays out the views, adds dimensions and a title block, exports PDF.</sub></td><td width="50%" valign="top"><img src="docs/images/dfm-thin-wall.webp" width="100%" alt="A section cut through an enclosure whose walls are only 0.8 mm thick, drawn as thin lines."><br><sub><b>Ask:</b> "Check this enclosure for injection moulding and suggest a change if needed." (before)<br><b>The AI:</b> runs the design check and flags the 0.8 mm walls (limit 1.2 mm).</sub></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/images/dfm-fixed.webp" width="100%" alt="The same enclosure cross-section after the walls were thickened, with an even wall all round."><br><sub><b>Ask:</b> Same request, after the fix.<br><b>The AI:</b> with your OK, thickens the wall to 2.5 mm and re-checks.</sub></td><td width="50%" valign="top"><img src="docs/images/zebra-fillet.webp" width="100%" alt="A smooth block with a large rounded edge shown with zebra stripes that flow without kinks across the blend."><br><sub><b>Ask:</b> "Make an 80 x 50 x 25 mm block with a smooth 10 mm blend on the top edges and show me zebra stripes."<br><b>The AI:</b> applies a curvature-continuous fillet and shows zebra stripes to check it.</sub></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/images/edit-by-hand.webp" width="100%" alt="The PraxisCAD window with the aluminium bracket: the hole tool open on the left, the live 3D model in the middle and the editable parameters and mass properties on the right."><br><sub><b>Ask:</b> No prompt needed.<br><b>The AI:</b> You can take over anytime: change a value yourself and the model rebuilds.</sub></td><td width="50%"></td></tr>
+</table>
 
 ## What's here
 

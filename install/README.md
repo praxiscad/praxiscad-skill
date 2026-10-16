@@ -12,6 +12,20 @@ Latest version, direct links:
 If you use this skill and PraxisCAD is not installed, your AI will offer these links and ask before
 downloading anything.
 
+> **Beta.** PraxisCAD is in beta: expect rough edges, and please report anything odd.
+
+### First launch (the app is not code-signed yet)
+PraxisCAD is not yet signed with an Apple Developer ID, so every Mac shows a one-time warning.
+The warning is about the missing signature, not about anything found in the app; signed builds are coming soon.
+
+**macOS**
+1. Open the downloaded `.dmg` and drag **PraxisCAD** to **Applications**.
+2. Open PraxisCAD. macOS says it could not verify the app. Click **Done** (not Move to Bin).
+3. Open **System Settings → Privacy & Security**, scroll down, click **Open Anyway** next to PraxisCAD, and confirm.
+   You only need to do this once.
+
+**Windows:** if SmartScreen appears, click **More info → Run anyway**.
+
 ## 2. Connect your AI client
 PraxisCAD ships a small MCP server, `praxiscad-mcp`, inside the app. In PraxisCAD open
 **AI → Connect AI assistant**: it lists the AI clients installed on your computer and connects
@@ -59,7 +73,7 @@ checks, worked examples):
 - other clients: use `instructions/AGENTS.md` as project rules or a system prompt (see the
   main [README](../README.md#quick-start) for where each client reads it).
 
-Update to the latest version (v0.11) whenever you update PraxisCAD; older copies don't describe
+Update to the latest version (v0.12) whenever you update PraxisCAD; older copies don't describe
 the newer tools.
 
 ## Privacy
