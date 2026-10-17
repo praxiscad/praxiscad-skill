@@ -6,7 +6,7 @@
   "version": "TODO: 0.4.0 (match the released PraxisCAD app version)",
   "websiteUrl": "https://praxiscad.com",
   "repository": {
-    "url": "https://github.com/saurabh-keskar/praxiscad-skill",
+    "url": "https://github.com/praxiscad/praxiscad-skill",
     "source": "github"
   },
   "packages": [
