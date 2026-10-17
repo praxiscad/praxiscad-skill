@@ -1,6 +1,6 @@
 ---
 name: praxiscad
-description: Designs, edits and inspects mechanical CAD in the PraxisCAD desktop app through its MCP server. Builds parametric parts from text, photos, drawings or DXF files (sketches with splines and text, extrudes, revolves, tapped/counterbored holes, threads, fillets, patterns, lofts, sweeps, shells; named parameters), traces calibrated reference images, edits imported STEP files (resize holes, remove fillets), assembles parts with mates (gears, cams, limits; DOF, motion, BOM, interference), makes 2D drawings (tolerances, GD&T, BOM, balloons; PDF/DXF/SVG), assigns materials (mass, product renders), and checks manufacturability for CNC, 3D printing, molding and sheet metal. Verifies with exact mass and per-model renders from any angle; highlights faces; saves .pcad/.pcasm/.pcdrw or exports STEP/STL/3MF/OBJ and sketch DXF. Use when the user asks to model, design, modify, measure, assemble, draw, render, check or export a CAD part, STEP or DXF file, shares an image of a part to rebuild, or mentions PraxisCAD.
+description: Text-to-CAD and image-to-CAD for any MCP-capable AI client, with local LLMs too: designs, edits and inspects parametric 3D CAD in the PraxisCAD desktop app, which runs offline so designs stay private. Builds parts from text, photos, drawings or DXF (sketches, extrudes, revolves, tapped/counterbored holes, threads, fillets, lofts, sweeps, shells, named parameters), edits imported STEP files, assembles with mates (DOF, BOM, interference), makes 2D drawings (GD&T, PDF/DXF/SVG), assigns materials, checks manufacturability for CNC, 3D printing (FDM/SLA), molding and sheet metal, verifies with mass and renders, and exports STEP/STL/3MF/OBJ/DXF. Use when the user asks to model, design, modify, measure, assemble, draw, render, check or export a CAD part, STEP or DXF file, wants a 3D-printable part, shares an image of a part to rebuild, or mentions PraxisCAD.
 compatibility: Requires the PraxisCAD desktop app (macOS or Windows) running, with its MCP server ("praxiscad") connected to an MCP-capable AI client.
 metadata:
   version: "0.12.0"
@@ -304,6 +304,13 @@ Views, directions and section details: [references/views-and-conventions.md](ref
 - *PraxisCAD is not running* → ask the user to open the app.
 
 More: [references/troubleshooting.md](references/troubleshooting.md).
+
+## Reporting a PraxisCAD bug
+When a PraxisCAD tool errors unexpectedly, crashes, hangs, or gives a clearly wrong result, and it is not the user's input mistake (not a normal validation error you can fix by correcting the request):
+1. Tell the user what happened and offer to draft a bug report. Do nothing further without their OK.
+2. With their OK, call the MCP tool `prepare_bug_report` with `title`, `what_happened`, `expected`, `steps_to_reproduce` (list of steps) and `tool_calls` (the relevant calls and errors). `include_model_info` defaults to false and `open_mail_app` to true. It only drafts the report and opens the user's mail app addressed to support@praxiscad.com; **the user reviews and sends it**.
+3. Never include model or file details (`include_model_info: true`, part names, paths, dimensions) without asking the user first. Never send email by any other means.
+4. If the tool does not exist (older PraxisCAD version), write the draft in chat (title, what happened, expected, steps, tool calls) and give a link the user can click: `mailto:support@praxiscad.com?subject=PraxisCAD%20bug%3A%20<short%20title>`. Suggest updating PraxisCAD.
 
 ## Inspecting existing models (STEP)
 - Overall size comes from the bbox `size` in `praxiscad:get_model_info` (X × Y × Z mm).

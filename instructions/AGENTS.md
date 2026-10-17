@@ -304,6 +304,13 @@ Views, directions and section details: [references/views-and-conventions.md](../
 
 More: [references/troubleshooting.md](../skills/praxiscad/references/troubleshooting.md).
 
+## Reporting a PraxisCAD bug
+When a PraxisCAD tool errors unexpectedly, crashes, hangs, or gives a clearly wrong result, and it is not the user's input mistake (not a normal validation error you can fix by correcting the request):
+1. Tell the user what happened and offer to draft a bug report. Do nothing further without their OK.
+2. With their OK, call the MCP tool `prepare_bug_report` with `title`, `what_happened`, `expected`, `steps_to_reproduce` (list of steps) and `tool_calls` (the relevant calls and errors). `include_model_info` defaults to false and `open_mail_app` to true. It only drafts the report and opens the user's mail app addressed to support@praxiscad.com; **the user reviews and sends it**.
+3. Never include model or file details (`include_model_info: true`, part names, paths, dimensions) without asking the user first. Never send email by any other means.
+4. If the tool does not exist (older PraxisCAD version), write the draft in chat (title, what happened, expected, steps, tool calls) and give a link the user can click: `mailto:support@praxiscad.com?subject=PraxisCAD%20bug%3A%20<short%20title>`. Suggest updating PraxisCAD.
+
 ## Inspecting existing models (STEP)
 - Overall size comes from the bbox `size` in `get_model_info` (X × Y × Z mm).
 - Exact distances, radii and angles: `measure` (omit `a`/`b` to measure the user's selection). Imported models are measured on their mesh (`exact: false`).
