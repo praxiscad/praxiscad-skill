@@ -34,7 +34,7 @@ them with one click (it shows what it will write and backs up the client's confi
 ### By hand
 Add a stdio MCP server named `praxiscad` whose command is the absolute path to `praxiscad-mcp`:
 - macOS: `/Applications/PraxisCAD.app/Contents/MacOS/praxiscad-mcp`
-- Windows: `praxiscad-mcp.exe` next to `PraxisCAD.exe` in the install folder
+- Windows: `C:\Users\YOU\AppData\Local\PraxisCAD\praxiscad-mcp.exe` (`%LOCALAPPDATA%\PraxisCAD`, next to `PraxisCAD.exe`)
 
 Most clients use this JSON shape in their MCP config:
 
@@ -60,8 +60,8 @@ Add to `~/.codex/config.toml` (or run `codex mcp add praxiscad -- <path>`):
 [mcp_servers.praxiscad]
 # macOS
 command = "/Applications/PraxisCAD.app/Contents/MacOS/praxiscad-mcp"
-# Windows: use the full path to praxiscad-mcp.exe in the install folder, for example
-# command = 'C:\Program Files\PraxisCAD\praxiscad-mcp.exe'
+# Windows: use the full path to praxiscad-mcp.exe, for example
+# command = 'C:\Users\YOU\AppData\Local\PraxisCAD\praxiscad-mcp.exe'
 ```
 
 Codex reads skills from `$HOME/.agents/skills` (all your projects) and `.agents/skills` in a
