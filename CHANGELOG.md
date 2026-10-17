@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- New skill `praxiscad-local` (`skills/praxiscad-local/SKILL.md`, about 2k tokens) for small local models (8B class, 32k context): use it with the MCP server's core profile (`praxiscad-mcp --profile core` or `PRAXISCAD_MCP_PROFILE=core`). Short rules, copy-ready steps for a plate with holes, cup, L-bracket and open box, resizing and mass, and an error table.
+
 ## v0.14.1 — 2026-10-17
 - Added the PraxisCAD Skill License (`LICENSE`, also inside the skill zip): free to use with PraxisCAD, including commercial work; no copying, re-publishing or modified versions. README License section.
 
