@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "TODO: io.github.<owner>/praxiscad (namespace must match the verified GitHub owner or a DNS-verified domain such as com.praxiscad/praxiscad)",
+  "title": "PraxisCAD",
+  "description": "Local-first parametric CAD for any AI client: text-to-CAD, STEP, 3D printing. Designs stay on your computer.",
+  "version": "TODO: 0.4.0 (match the released PraxisCAD app version)",
+  "websiteUrl": "https://praxiscad.com",
+  "repository": {
+    "url": "https://github.com/saurabh-keskar/praxiscad-skill",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "TODO: https://downloads.praxiscad.com/<path>/praxiscad.mcpb (PraxisCAD ships a desktop installer with a bundled praxiscad-mcp binary; an MCPB bundle or npm wrapper does not exist yet. Registry needs one of: npm, pypi, oci, nuget, mcpb)",
+      "version": "TODO",
+      "fileSha256": "TODO: 64-char lowercase sha256 of the bundle (required for mcpb)",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}

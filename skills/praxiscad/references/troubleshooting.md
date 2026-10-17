@@ -140,3 +140,6 @@ that operation and resend the **whole corrected batch**.
 | Balloons crowd one corner or overlap the BOM | Many items on one side of the view | `auto_balloon {"replace": true, "spacing": 4}` or `"side": "left"` / `"right"`; placement stays clear of views, tables and the title block |
 | DXF export wrote several files | The drawing has several sheets | Expected (`name-1.dxf`, …); pass `sheet` for one file |
 | An older PraxisCAD can't open the `.pcdrw` | It uses newer drawing features (sheets, tolerances, GD&T, assembly sources) | Send PDF/DXF, or have the other person update PraxisCAD |
+
+## Reporting a bug
+If a failure looks like a PraxisCAD bug (crash, hang, unexpected internal error, clearly wrong result), offer to draft a report with `prepare_bug_report`; the user reviews and sends the email to support@praxiscad.com. See "Reporting a PraxisCAD bug" in SKILL.md.

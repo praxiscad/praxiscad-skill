@@ -1,4 +1,11 @@
-# PraxisCAD — Text-to-CAD and Image-to-CAD with any AI assistant (MCP skill)
+# PraxisCAD: AI CAD, text-to-CAD and image-to-CAD over MCP (local and private)
+
+**MCP CAD server skill for any AI client, cloud or local LLM (Ollama, LM Studio).** PraxisCAD is a
+local-first, offline desktop CAD app (macOS and Windows): your designs never leave your computer.
+Parametric modeling, STEP import/export, STL/3MF for 3D printing, 2D drawings, assemblies and
+manufacturability checks, all driven by plain-language chat. Support: support@praxiscad.com.
+
+Keywords: CAD, text to CAD, MCP CAD, AI CAD, local LLM CAD, offline, private, STEP, 3D printing, parametric.
 
 **Describe a part in plain words, or show your AI a sketch or photo, and get a real, editable
 parametric 3D CAD model** — with STEP/STL export, 2D drawings, assemblies and manufacturability
@@ -198,8 +205,21 @@ model in PraxisCAD, with named dimensions you can change later, not a one-off me
 in PraxisCAD; you can also trace a calibrated reference image. Accuracy depends on the dimensions you
 give.
 
+**Does it work with a local LLM and offline?** Yes. PraxisCAD runs on your computer and does not
+call any AI service itself. Connect a local runtime that supports MCP tools (for example Ollama or
+LM Studio through an MCP-capable client) and nothing about your design leaves your machine. Results
+depend on the model; larger tool-calling models do better. PraxisCAD may check for app updates and
+the optional account sign-in uses the network; designs are never uploaded.
+
 **Which AI assistants work?** Any assistant or agent that supports MCP tools. The skill is
 model-agnostic, and you use your own AI subscription; PraxisCAD does not charge for AI usage.
 
 **What file formats?** STEP import/export, STL, 3MF and OBJ export, DXF import/export, and PDF, DXF
 or SVG drawings.
+
+## Support and bug reports
+
+Email **support@praxiscad.com**. If a PraxisCAD tool misbehaves, your AI client can offer to draft
+a bug report with the `prepare_bug_report` tool (newer app versions): it opens your mail app with a
+draft addressed to support@praxiscad.com, and you review and send it. Nothing is sent automatically
+and model or file details are only included if you agree.
