@@ -9,7 +9,7 @@ Keywords: CAD, text to CAD, MCP CAD, AI CAD, local LLM CAD, offline, private, ST
 
 **Describe a part in plain words, or show your AI a sketch or photo, and get a real, editable
 parametric 3D CAD model** — with STEP/STL export, 2D drawings, assemblies and manufacturability
-checks. This is the open skill and instruction set for **PraxisCAD**, an AI-native desktop CAD app
+checks. This is the skill and instruction set for **PraxisCAD**, an AI-native desktop CAD app
 for macOS and Windows with a built-in MCP (Model Context Protocol) server.
 
 > Example prompts: *"Make a 60 × 40 × 5 mm aluminium mounting plate with four M4 clearance holes
