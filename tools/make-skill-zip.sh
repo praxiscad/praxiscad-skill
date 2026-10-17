@@ -6,6 +6,7 @@ tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$root/dist" "$tmp/praxiscad"
 cp -R "$root/skills/praxiscad/." "$tmp/praxiscad/"
+cp "$root/LICENSE" "$tmp/praxiscad/LICENSE"
 rm -f "$root/dist/praxiscad-skill.zip"
 (cd "$tmp" && zip -qr "$root/dist/praxiscad-skill.zip" praxiscad -x '*.DS_Store')
 echo "$root/dist/praxiscad-skill.zip"

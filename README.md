@@ -219,6 +219,10 @@ model-agnostic, and you use your own AI subscription; PraxisCAD does not charge 
 **What file formats?** STEP import/export, STL, 3MF and OBJ export, DXF import/export, and PDF, DXF
 or SVG drawings.
 
+## License
+
+The skill is free to use with PraxisCAD. It is not open source: copying, re-publishing or modified versions are not allowed. See [LICENSE](LICENSE). GitHub's own terms let any visitor view and fork public repositories on GitHub; the licence still forbids reuse.
+
 ## Support and bug reports
 
 Email **support@praxiscad.com**. If a PraxisCAD tool misbehaves, your AI client can offer to draft

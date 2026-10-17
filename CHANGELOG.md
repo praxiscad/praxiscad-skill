@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.14.1 — 2026-10-17
+- Added the PraxisCAD Skill License (`LICENSE`, also inside the skill zip): free to use with PraxisCAD, including commercial work; no copying, re-publishing or modified versions. README License section.
+
 ## v0.14.0 — 2026-10-17
 - Claude Code plugin and marketplace: `.claude-plugin/marketplace.json` and `plugin.json` (install with `/plugin marketplace add praxiscad/praxiscad-skill` then `/plugin install praxiscad@praxiscad`). The plugin contains the skill only; the MCP server ships inside the desktop app.
 - `tools/make-skill-zip.sh` builds `dist/praxiscad-skill.zip` (skill at `praxiscad/SKILL.md`) for upload as a skill in Claude apps and ChatGPT; attached to GitHub releases.
