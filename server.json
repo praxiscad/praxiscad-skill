@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "TODO: io.github.<owner>/praxiscad (namespace must match the verified GitHub owner or a DNS-verified domain such as com.praxiscad/praxiscad)",
   "title": "PraxisCAD",
-  "description": "Local-first parametric CAD for any AI client: text-to-CAD, STEP, 3D printing. Designs stay on your computer.",
+  "description": "Local-first parametric CAD for any AI client: text-to-CAD, STEP, 3D printing, private.",
   "version": "TODO: 0.4.0 (match the released PraxisCAD app version)",
   "websiteUrl": "https://praxiscad.com",
   "repository": {
