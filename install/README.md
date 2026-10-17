@@ -51,7 +51,22 @@ Most clients use this JSON shape in their MCP config:
 | Gemini CLI | `~/.gemini/settings.json` |
 | LM Studio (local models) | `~/.lmstudio/mcp.json` |
 | VS Code (Copilot agent mode) | user `mcp.json`: `{"servers": {"praxiscad": {"type": "stdio", "command": "<path>"}}}` |
-| OpenAI Codex CLI | `~/.codex/config.toml`: `[mcp_servers.pcad]` + `command = "<path>"` |
+| OpenAI Codex | `~/.codex/config.toml`, see [Codex](#openai-codex) below |
+
+### OpenAI Codex
+Add to `~/.codex/config.toml` (or run `codex mcp add praxiscad -- <path>`):
+
+```toml
+[mcp_servers.praxiscad]
+# macOS
+command = "/Applications/PraxisCAD.app/Contents/MacOS/praxiscad-mcp"
+# Windows: use the full path to praxiscad-mcp.exe in the install folder, for example
+# command = 'C:\Program Files\PraxisCAD\praxiscad-mcp.exe'
+```
+
+Codex reads skills from `$HOME/.agents/skills` (all your projects) and `.agents/skills` in a
+repository; copy `skills/praxiscad` to `~/.agents/skills/praxiscad`. Alternatively put
+`instructions/AGENTS.md` in your project's `AGENTS.md`.
 
 Config locations can change between client versions — check your client's MCP documentation.
 Clients that only support **remote** MCP servers over HTTPS (for example the ChatGPT apps) are
@@ -64,14 +79,23 @@ PraxisCAD window as the AI builds it, and PraxisCAD shows which assistant made t
 with *"Check it for 3D printing"* (design check) or *"Make a drawing of it and export a PDF"*.
 
 ## 4. Optional: add the instructions
-The MCP server already sends core instructions. For better results add this repository's
-guidance (design rules, workflows for standard holes and threads, sketch tools and DXF
-import/export, materials and renders, assemblies and motion, drawings, STEP editing and design
-checks, worked examples):
-- clients with Agent Skills support: copy `skills/praxiscad` into the client's skills folder
-  (for example `~/.claude/skills/praxiscad`), or upload the zipped folder as a skill;
-- other clients: use `instructions/AGENTS.md` as project rules or a system prompt (see the
+Pick the way that matches your client:
+- **Claude Code (plugin):** in a Claude Code session run
+  `/plugin marketplace add praxiscad/praxiscad-skill`, then `/plugin install praxiscad@praxiscad`.
+  The plugin contains only the skill; the PraxisCAD MCP server comes with the desktop app (step 2).
+- **Claude apps and ChatGPT (workplace plans):** download `praxiscad-skill.zip` from the
+  [latest GitHub release](https://github.com/praxiscad/praxiscad-skill/releases/latest) and upload it as a
+  skill (Claude: Customize > Skills; ChatGPT: skills settings). Note: ChatGPT web and desktop cannot reach
+  the local PraxisCAD MCP server yet, so the skill alone does not let ChatGPT drive PraxisCAD.
+- **OpenAI Codex:** copy `skills/praxiscad` to `~/.agents/skills/praxiscad` (see [Codex](#openai-codex)).
+- Other clients with Agent Skills support: copy `skills/praxiscad` into the client's skills folder
+  (for example `~/.claude/skills/praxiscad`).
+- Everything else: use `instructions/AGENTS.md` as project rules or a system prompt (see the
   main [README](../README.md#quick-start) for where each client reads it).
+
+The skill adds design rules, workflows for standard holes and threads, sketch tools and DXF
+import/export, materials and renders, assemblies and motion, drawings, STEP editing, design
+checks and worked examples on top of the instructions the MCP server already sends.
 
 Update to the latest version (v0.12) whenever you update PraxisCAD; older copies don't describe
 the newer tools.

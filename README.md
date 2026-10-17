@@ -111,7 +111,9 @@ Real results from plain-language requests to an MCP-capable AI client:
    - **OpenAI Codex CLI:** put it in your project's `AGENTS.md`.
    - **Gemini CLI:** put it in `GEMINI.md`.
    - **VS Code Copilot:** `.github/copilot-instructions.md`.
-   - **Claude:** copy `skills/praxiscad` to `~/.claude/skills/praxiscad` (Claude Code) or upload the zipped folder as a skill (Claude apps).
+   - **Claude Code (plugin):** `/plugin marketplace add praxiscad/praxiscad-skill`, then `/plugin install praxiscad@praxiscad` (or copy `skills/praxiscad` to `~/.claude/skills/praxiscad`).
+   - **Claude apps / ChatGPT (workplace plans):** download `praxiscad-skill.zip` from the [latest release](https://github.com/praxiscad/praxiscad-skill/releases/latest) and upload it as a skill. ChatGPT web/desktop cannot reach the local PraxisCAD MCP server yet.
+   - **OpenAI Codex:** MCP server in `~/.codex/config.toml` (`[mcp_servers.praxiscad]`, see [install/README.md](install/README.md#openai-codex)); skills go in `~/.agents/skills/praxiscad`.
    - **Other clients:** paste `instructions/AGENTS.md` into the system prompt.
 4. Ask your AI: *"In PraxisCAD, make a 100 × 60 × 6 mm aluminium plate with four M5 holes 10 mm from the corners."*
 
