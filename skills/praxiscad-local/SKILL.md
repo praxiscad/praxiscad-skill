@@ -3,10 +3,12 @@ name: praxiscad-local
 description: PraxisCAD for small local models (8B class, 32k context); use with PRAXISCAD_MCP_PROFILE=core (praxiscad-mcp --profile core). Short rules and ready-to-copy steps for simple parts - plates with holes, cups and tubes, L-brackets, open boxes, resizing a part, mass. Use when a small local model is asked to model or edit a simple CAD part in PraxisCAD.
 compatibility: Requires the PraxisCAD desktop app running and its MCP server connected with the core profile (args ["--profile","core"] or env PRAXISCAD_MCP_PROFILE=core).
 metadata:
-  version: "0.1.0"
+  version: "0.15.0"
 ---
 
 # PraxisCAD for small local models
+
+Requires the PraxisCAD release after 0.4.3. With 0.4.3 or older, use the main praxiscad skill.
 
 15 tools: praxiscad_status, list_models, new_part, set_parameters, add_feature, apply_operations, get_part, mass_properties, set_material, render_views, export_model, save_part, undo, close_model, modeling_reference. Units mm, Z up.
 
