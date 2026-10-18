@@ -69,8 +69,9 @@ repository; copy `skills/praxiscad` to `~/.agents/skills/praxiscad`. Alternative
 `instructions/AGENTS.md` in your project's `AGENTS.md`.
 
 Config locations can change between client versions — check your client's MCP documentation.
-Clients that only support **remote** MCP servers over HTTPS (for example the ChatGPT apps) are
-not supported yet; a remote connector is planned.
+Clients that only support **remote** MCP servers over HTTPS are not supported yet; a remote connector is planned.
+The **ChatGPT desktop app** works: in PraxisCAD click Connect next to "Codex CLI" (the app shares that setup), and both
+ChatGPT and Codex in the app can use PraxisCAD.
 
 ## 3. Check it works
 Ask your AI: *"Is PraxisCAD running?"* — it calls `praxiscad_status` and reports the app version.
@@ -87,8 +88,8 @@ Pick the way that matches your client:
   The plugin contains only the skill; the PraxisCAD MCP server comes with the desktop app (step 2).
 - **Claude apps and ChatGPT (workplace plans):** download `praxiscad-skill.zip` from the
   [latest GitHub release](https://github.com/praxiscad/praxiscad-skill/releases/latest) and upload it as a
-  skill (Claude: Customize > Skills; ChatGPT: skills settings). Note: ChatGPT web and desktop cannot reach
-  the local PraxisCAD MCP server yet, so the skill alone does not let ChatGPT drive PraxisCAD.
+  skill (Claude: Customize > Skills; ChatGPT: skills settings). The ChatGPT desktop app connects to PraxisCAD
+  through the Codex setup (PraxisCAD > AI > Connect AI assistant > Codex CLI).
 - **OpenAI Codex:** copy `skills/praxiscad` to `~/.agents/skills/praxiscad` (see [Codex](#openai-codex)).
 - Other clients with Agent Skills support: copy `skills/praxiscad` into the client's skills folder
   (for example `~/.claude/skills/praxiscad`).
