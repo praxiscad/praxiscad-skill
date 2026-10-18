@@ -114,7 +114,7 @@ Real results from plain-language requests to an MCP-capable AI client:
    - **Claude Code (plugin):** `/plugin marketplace add praxiscad/praxiscad-skill`, then `/plugin install praxiscad@praxiscad` (or copy `skills/praxiscad` to `~/.claude/skills/praxiscad`).
    - **Claude apps / ChatGPT (workplace plans):** download `praxiscad-skill.zip` from the [latest release](https://github.com/praxiscad/praxiscad-skill/releases/latest) and upload it as a skill. ChatGPT web/desktop cannot reach the local PraxisCAD MCP server yet.
    - **OpenAI Codex:** MCP server in `~/.codex/config.toml` (`[mcp_servers.praxiscad]`, see [install/README.md](install/README.md#openai-codex)); skills go in `~/.agents/skills/praxiscad`.
-   - **Small local models (8B class, e.g. gemma4:e4b):** use the compact `skills/praxiscad-local` skill (or `praxiscad-local-skill.zip` from the release) with the MCP core profile (`praxiscad-mcp --profile core`, ~5k tokens). Requires the PraxisCAD release after 0.4.3. With 0.4.3 or older, use the main praxiscad skill.
+   - **Small local models (8B class, e.g. gemma4:e4b):** use the compact `skills/praxiscad-local` skill (or `praxiscad-local-skill.zip` from the release) with the MCP core profile (`praxiscad-mcp --profile core`, ~5k tokens). Requires PraxisCAD 0.4.4 or later. With 0.4.3 or older, use the main praxiscad skill.
    - **Other clients:** paste `instructions/AGENTS.md` into the system prompt.
 4. Ask your AI: *"In PraxisCAD, make a 100 × 60 × 6 mm aluminium plate with four M5 holes 10 mm from the corners."*
 

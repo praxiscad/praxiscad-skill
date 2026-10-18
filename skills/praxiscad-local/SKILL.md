@@ -8,7 +8,7 @@ metadata:
 
 # PraxisCAD for small local models
 
-Requires the PraxisCAD release after 0.4.3. With 0.4.3 or older, use the main praxiscad skill.
+Requires PraxisCAD 0.4.4 or later. With 0.4.3 or older, use the main praxiscad skill.
 
 15 tools: praxiscad_status, list_models, new_part, set_parameters, add_feature, apply_operations, get_part, mass_properties, set_material, render_views, export_model, save_part, undo, close_model, modeling_reference. Units mm, Z up.
 

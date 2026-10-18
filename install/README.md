@@ -80,7 +80,7 @@ with *"Check it for 3D printing"* (design check) or *"Make a drawing of it and e
 
 ## 4. Optional: add the instructions
 
-**Small local models:** use the compact `praxiscad-local` skill with `praxiscad-mcp --profile core`. Requires the PraxisCAD release after 0.4.3. With 0.4.3 or older, use the main praxiscad skill.
+**Small local models:** use the compact `praxiscad-local` skill with `praxiscad-mcp --profile core`. Requires PraxisCAD 0.4.4 or later. With 0.4.3 or older, use the main praxiscad skill.
 Pick the way that matches your client:
 - **Claude Code (plugin):** in a Claude Code session run
   `/plugin marketplace add praxiscad/praxiscad-skill`, then `/plugin install praxiscad@praxiscad`.

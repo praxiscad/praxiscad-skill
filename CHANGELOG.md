@@ -1,7 +1,7 @@
 # Changelog
 
 ## v0.15.0 — 2026-10-17
-- New compact `praxiscad-local` skill for small local models such as gemma4:e4b (~5k tokens with the MCP core profile, `praxiscad-mcp --profile core`). Requires the PraxisCAD release after 0.4.3; with 0.4.3 or older use the main praxiscad skill. Release has a second zip, `praxiscad-local-skill.zip`.
+- New compact `praxiscad-local` skill for small local models such as gemma4:e4b (~5k tokens with the MCP core profile, `praxiscad-mcp --profile core`). Requires PraxisCAD 0.4.4 or later; with 0.4.3 or older use the main praxiscad skill. Release has a second zip, `praxiscad-local-skill.zip`.
 - Windows MCP path fix in the install docs.
 - README wording fix.
 
