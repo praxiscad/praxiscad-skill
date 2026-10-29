@@ -1,0 +1,50 @@
+PraxisCAD Skill License
+
+Copyright (c) 2026 PraxisCAD. All rights reserved.
+
+"The Skill" means every file in this repository and in any package built
+from it (instructions, references, examples, scripts and metadata).
+
+1. What you may do
+
+You may download, install and use the Skill, unmodified, with the PraxisCAD
+app, for personal and commercial work, free of charge. You may make the local
+copies that this use needs, for example installing the Skill into an AI
+client, a plugin cache, or an uploaded skill in a Claude app or ChatGPT.
+
+2. What you may not do
+
+You may not:
+  a. redistribute, re-publish, mirror, host or sell the Skill, or any
+     modified version of it, in whole or in part;
+  b. publish skills, plugins, prompts or other works derived from the Skill;
+  c. use the Skill, or anything in it, to build, train or improve a CAD
+     product or service that competes with PraxisCAD.
+
+Viewing and forking this repository on GitHub, as GitHub's own terms allow,
+does not give you any right beyond this licence.
+
+3. Your designs
+
+Parts, assemblies, drawings and other designs you create using the Skill
+belong to you. This licence puts no restriction on them.
+
+4. No warranty
+
+The Skill is provided "as is", without warranty of any kind, express or
+implied, including fitness for a particular purpose. Check any design before
+you manufacture or rely on it.
+
+5. Limit of liability
+
+To the extent the law allows, PraxisCAD is not liable for any loss or damage
+arising from the Skill or its use.
+
+6. Ending this licence
+
+This licence ends automatically if you break it. Then you must delete all
+copies of the Skill.
+
+7. Other permissions
+
+For any use not allowed here, write to support@praxiscad.com.

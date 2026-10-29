@@ -1,0 +1,25 @@
+dist/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# secrets: never commit keys, tokens or environment files
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p8
+*.p12
+*.pfx
+*.keystore
+r2.env
+.dev.vars
+
+# private material must never enter this public repo
+notes/
+.local-samples/
+.local-samples*/
