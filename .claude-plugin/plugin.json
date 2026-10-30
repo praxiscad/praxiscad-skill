@@ -1,6 +1,6 @@
 {
   "name": "praxiscad",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "PraxisCAD skill: design rules, workflows and worked examples for driving the PraxisCAD desktop CAD app through MCP. The PraxisCAD MCP server ships inside the desktop app (install PraxisCAD separately); this plugin does not install it.",
   "author": { "name": "PraxisCAD", "email": "support@praxiscad.com", "url": "https://praxiscad.com" },
   "license": "SEE LICENSE IN LICENSE",

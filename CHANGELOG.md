@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.15.1 — 2026-10-30
 - STEP docs updated: import notices grouped as info or warning, hidden bodies skipped, STEP length units read, assembly placements and repeated instances shown in the imported view, faceted STEP solids import as exact planar solids, and assembly STEP export includes imported components with a warning for parts that cannot be exported.
 
 ## v0.15.0 — 2026-10-17
